@@ -5,26 +5,24 @@ public class Patient : User
     public string InsuranceProvider { get; }
     public string InsurancePolicyNumber { get; }
 
-    public Patient(Guid id, string name, DateTime birthDate, Address address, string phoneNumber, string email, 
-        string insuranceProvider, string insurancePolicyNumber)
+    private readonly IMedicalRecordObserver _medicalRecordObserver;
+
+    public Patient(Guid id, string name, DateTime birthDate, Address address, string phoneNumber, string email,
+        string insuranceProvider, string insurancePolicyNumber, IMedicalRecordObserver medicalRecordObserver)
         : base(id, name, birthDate, address, phoneNumber, email)
     {
         InsuranceProvider = insuranceProvider;
         InsurancePolicyNumber = insurancePolicyNumber;
-    }
-    
-    void SubscribeToMedicalRecordUpdates(MedicalRecord record)
-    {
-        record.Updated += OnMedicalRecordUpdated;
+        _medicalRecordObserver = medicalRecordObserver;
     }
 
-    public void UnsubscribeFromMedicalRecordUpdates(MedicalRecord record)
+    public void SubscribeToMedicalRecordUpdates()
     {
-        record.Updated -= OnMedicalRecordUpdated;
+        _medicalRecordObserver.Subscribe();
     }
 
-    private void OnMedicalRecordUpdated(object? sender, MessageEventArgs e)
+    public void UnsubscribeFromMedicalRecordUpdates()
     {
-        var message = e.Message;
+        _medicalRecordObserver.Unsubscribe();
     }
 }

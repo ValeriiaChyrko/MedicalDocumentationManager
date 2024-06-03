@@ -126,9 +126,11 @@ namespace MedicalDocumentationManager.Tests
             const string email = "john.doe@example.com";
             const string insuranceProvider = "ABC Insurance";
             const string insurancePolicyNumber = "123456789";
+            
+            var medicalRecordObserver = Substitute.For<IMedicalRecordObserver>();
 
             // Act
-            var patient = new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber);
+            var patient = new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber, medicalRecordObserver);
 
             // Assert
             patient.Id.Should().Be(id);
