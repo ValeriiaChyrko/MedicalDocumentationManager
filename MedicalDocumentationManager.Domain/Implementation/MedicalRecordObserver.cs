@@ -5,36 +5,40 @@ namespace MedicalDocumentationManager.Domain.Implementation;
 public class MedicalRecordObserver : IMedicalRecordObserver
 {
     private readonly MedicalRecord _record;
-    private readonly IMessageHandler _messageHandler;
+    public event EventHandler<MessageEventArgs>? OnNotifyEvent;
 
-    public MedicalRecordObserver(MedicalRecord record, IMessageHandler messageHandler)
+    public MedicalRecordObserver(MedicalRecord record)
     {
         _record = record ?? throw new ArgumentNullException(nameof(record));
-        _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
     }
-    
+        
     public void Unsubscribe()
     {
+        if (!_record.IsRegistered(OnMedicalRecordUpdated))
+        {
+            throw new InvalidOperationException($"The observer is not subscribed to the {nameof(OnMedicalRecordUpdated)} event.");
+        }
+        
         _record.Updated -= OnMedicalRecordUpdated;
     }
 
     public void Subscribe()
     {
+        if (_record.IsRegistered(OnMedicalRecordUpdated))
+        {
+            throw new InvalidOperationException($"The observer is already subscribed to the {nameof(OnMedicalRecordUpdated)} event.");
+        }
+            
         _record.Updated += OnMedicalRecordUpdated;
     }
-    
+        
     private void OnMedicalRecordUpdated(object? sender, MessageEventArgs e)
     {
-        var message = e.Message;
-        _messageHandler.HandleMessage(message);
+        e.Message = $"Medical history was updated: {e.Message}";
+        OnNotifyEvent?.Invoke(this, e);
     }
     
-    public void Notify(string message)
-    {
-        if (string.IsNullOrEmpty(message))
-        {
-            throw new ArgumentNullException(nameof(message));
-        }
-        _messageHandler.HandleMessage(message);
-    }
+    public bool IsRegistered(Delegate prospectiveHandler) => 
+        OnNotifyEvent != null 
+        && OnNotifyEvent.GetInvocationList().Any(existingHandler => existingHandler.Method == prospectiveHandler.Method);
 }

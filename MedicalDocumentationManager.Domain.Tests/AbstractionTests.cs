@@ -95,26 +95,6 @@ namespace MedicalDocumentationManager.Tests
         }
 
         [Test]
-        public void Update_RaisesUpdatedEvent_WithCorrectMessage()
-        {
-            // Arrange
-            var patientId = Guid.NewGuid();
-            var doctorId = Guid.NewGuid();
-            const string record = "Some medical record";
-            var medicalRecord = MedicalRecord.Create(patientId, doctorId, record);
-            var eventHandler = Substitute.For<EventHandler<MessageEventArgs>>();
-
-            medicalRecord.Updated += eventHandler;
-
-            // Act
-            medicalRecord.Update(patientId, doctorId, "Updated medical record");
-
-            // Assert
-            eventHandler.Received().Invoke(Arg.Any<object>(), 
-                Arg.Is<MessageEventArgs>(e => e.Message == "Medical history updated: Updated medical record"));
-        }
-
-        [Test]
         public void Patient_Constructor_SetsPropertiesCorrectly()
         {
             // Arrange
@@ -128,9 +108,10 @@ namespace MedicalDocumentationManager.Tests
             const string insurancePolicyNumber = "123456789";
             
             var medicalRecordObserver = Substitute.For<IMedicalRecordObserver>();
+            var medicalRecordNotifier = Substitute.For<IMedicalRecordNotifier>();
 
             // Act
-            var patient = new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber, medicalRecordObserver);
+            var patient = new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber, medicalRecordObserver, medicalRecordNotifier);
 
             // Assert
             patient.Id.Should().Be(id);

@@ -1,9 +1,7 @@
 ﻿namespace MedicalDocumentationManager.Domain.Abstraction;
 
-public interface IMedicalRecordObserver : INotifiable
+public interface IMedicalRecordNotifier
 {
     void Subscribe();
     void Unsubscribe();
-
-    bool IsRegistered(Delegate prospectiveHandler);
 }

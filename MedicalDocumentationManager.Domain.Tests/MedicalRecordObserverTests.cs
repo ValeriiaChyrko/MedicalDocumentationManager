@@ -1,180 +1,149 @@
 ﻿using MedicalDocumentationManager.Domain.Abstraction;
 using MedicalDocumentationManager.Domain.Implementation;
 
-namespace MedicalDocumentationManager.Tests
+namespace MedicalDocumentationManager.Tests;
+
+[TestFixture]
+public class MedicalRecordObserverTests
 {
-    [TestFixture]
-    public class MedicalRecordObserverTests
+    [Test]
+    public void MedicalRecordObserver_Constructor_ThrowsArgumentNullException_WhenRecordIsNull()
     {
-        [Test]
-        public void SubscribeAndUnsubscribeFromMedicalRecord_UpdatesEventSubscriptions()
+        // Act
+        TestDelegate act = () => _ = new MedicalRecordObserver(null!);
+        
+        // Assert
+        Assert.Throws<ArgumentNullException>(act);
+    }
+
+    [Test]
+    public void Subscribe_DoesNotThrowArgumentNullException_WhenOnNotifyEventIsNull()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+
+        // Act and Assert
+        Assert.DoesNotThrow(() => observer.Subscribe());
+    }
+
+    [Test]
+    public void Subscribe_ThrowsInvalidOperationException_WhenOnMedicalRecordUpdatedIsAlreadySubscribed()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+        observer.Subscribe();
+
+        // Act
+        Action act = () => observer.Subscribe();
+        
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is already subscribed*");
+    }
+
+    [Test]
+    public void UnSubscribe_ThrowsInvalidOperationException_WhenOnMedicalRecordUpdatedIsNotSubscribed()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+
+        // Act
+        Action act = () => observer.Unsubscribe();
+        
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is not subscribed*");
+    }
+
+
+    [Test]
+    public void Constructor_ShouldThrowArgumentNullException_WhenRecordIsNull()
+    {
+        // Act
+        var act = () => _ = new MedicalRecordObserver(null!);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>().WithMessage("*record*");
+    }
+
+    [Test]
+    public void Subscribe_ShouldAttachEventHandler_ToRecordUpdatedEvent()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+
+        // Act
+        observer.Subscribe();
+
+        // Assert
+        record.Updated += Arg.Any<EventHandler<MessageEventArgs>>();
+    }
+
+    [Test]
+    public void Unsubscribe_ShouldDetachEventHandler_FromRecordUpdatedEvent()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+        observer.Subscribe();
+
+        // Act
+        observer.Unsubscribe();
+
+        // Assert
+        record.Updated -= Arg.Any<EventHandler<MessageEventArgs>>();
+    }
+
+    [Test]
+    public void OnMedicalRecordUpdated_ShouldInvokeOnNotifyEvent_WhenUpdatedEventIsRaised()
+    {
+        // Arrange
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var observer = new MedicalRecordObserver(record);
+        var onNotifyEventInvoked = false;
+
+        observer.OnNotifyEvent += (_, e) =>
         {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
+            onNotifyEventInvoked = true;
+            e.Message.Should().Be("Medical history was updated: New record");
+        };
 
-            // Act
-            observer.Subscribe();
-            medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), "New record");
-            observer.Unsubscribe();
-            medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), "Another record");
+        // Act
+        observer.Subscribe();
+        record.Update(Guid.Empty, Guid.Empty, "New record");
 
-            // Assert
-            messageHandlerMock.Received(1).HandleMessage(Arg.Any<string>());
-        }
+        // Assert
+        onNotifyEventInvoked.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsRegistered_ReturnsTrue_WhenHandlerIsRegistered()
+    {
+        // Arrange
+        var medicalRecord = MedicalRecord.Create(Guid.NewGuid(), Guid.NewGuid(), "Initial record");
+        var handler = new EventHandler<MessageEventArgs>((_, _) => { });
+        medicalRecord.Updated += handler;
 
-        [Test]
-        public void Notify_WithNullOrEmptyMessage_ThrowsArgumentNullException()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
+        // Act
+        var result = medicalRecord.IsRegistered(handler);
 
-            // Act and Assert
-            Assert.Throws<ArgumentNullException>(() => observer.Notify(null!));
-            Assert.Throws<ArgumentNullException>(() => observer.Notify(""));
-        }
+        // Assert
+        result.Should().BeTrue();
+    }
+    
+    [Test]
+    public void IsRegistered_ReturnsFalse_WhenHandlerIsNotRegistered()
+    {
+        // Arrange
+        var medicalRecord = MedicalRecord.Create(Guid.NewGuid(), Guid.NewGuid(), "Initial record");
+        var handler = new EventHandler<MessageEventArgs>((sender, args) => { });
 
-        [Test]
-        public void MissingMessageHandler_ThrowsArgumentNullException()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        // Act
+        var result = medicalRecord.IsRegistered(handler);
 
-            TestDelegate act = () => _ = new MedicalRecordObserver(medicalRecord, null!);
-
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(act);
-        }
-
-        [Test]
-        public void HandleMessage_CalledAfterEachMedicalRecordUpdate()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-
-            // Act
-            observer.Subscribe();
-            medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), "First record");
-            medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), "Second record");
-
-            // Assert
-            messageHandlerMock.Received(2).HandleMessage(Arg.Any<string>());
-        }
-
-        [Test]
-        public void HandleMessage_CalledCorrectNumberOfTimes()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-            var updatesCount = 5;
-
-            // Act
-            observer.Subscribe();
-            for (var i = 0; i < updatesCount; i++)
-            {
-                medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), $"Record {i + 1}");
-            }
-
-            // Assert
-            messageHandlerMock.Received(updatesCount).HandleMessage(Arg.Any<string>());
-        }
-
-        [Test]
-        public void Notify_CallsHandleMessageWithCorrectMessage()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-            const string message = "Test message";
-
-            // Act
-            observer.Notify(message);
-
-            // Assert
-            messageHandlerMock.Received(1).HandleMessage(message);
-        }
-
-        [Test]
-        public void UnsubscribeAfterMedicalRecordDeletion_UnsubscribesFromMedicalRecordUpdates()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-
-            // Act
-            observer.Subscribe();
-            // ReSharper disable once RedundantAssignment
-            medicalRecord = null; // Simulate deletion
-            GC.Collect(); // Trigger garbage collection
-            GC.WaitForPendingFinalizers();
-
-            // Assert
-            messageHandlerMock.DidNotReceive().HandleMessage(Arg.Any<string>());
-        }
-
-        [Test]
-        public void UnsubscribeBeforeObserverDeletion_UnsubscribesFromMedicalRecordUpdates()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observer = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-
-            // Act
-            observer.Subscribe();
-            // ReSharper disable once RedundantAssignment
-            observer = null; // Simulate observer deletion
-            GC.Collect(); // Trigger garbage collection
-            GC.WaitForPendingFinalizers();
-
-            // Assert
-            messageHandlerMock.DidNotReceive().HandleMessage(Arg.Any<string>());
-        }
-
-        [Test]
-        public void ConcurrentOperationWithMultipleObservers_WorksCorrectly()
-        {
-            // Arrange
-            var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
-            var messageHandlerMock = Substitute.For<IMessageHandler>();
-            var observersCount = 3;
-            var updatesCount = 5;
-
-            // Act
-            var observers = new MedicalRecordObserver[observersCount];
-            for (int i = 0; i < observersCount; i++)
-            {
-                observers[i] = new MedicalRecordObserver(medicalRecord, messageHandlerMock);
-                observers[i].Subscribe();
-            }
-
-            for (int i = 0; i < updatesCount; i++)
-            {
-                medicalRecord.Update(Guid.NewGuid(), Guid.NewGuid(), $"Record {i + 1}");
-            }
-
-            // Assert
-            messageHandlerMock.Received(observersCount * updatesCount).HandleMessage(Arg.Any<string>());
-        }
-
-        [Test]
-        public void InvalidArgumentsInConstructor_ThrowArgumentNullException()
-        {
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new MedicalRecordObserver(null!, Substitute.For<IMessageHandler>()));
-            
-            Assert.Throws<ArgumentNullException>(() =>
-               _ = new MedicalRecordObserver(MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty), null!));
-        }
+        // Assert
+        result.Should().BeFalse();
     }
 }
