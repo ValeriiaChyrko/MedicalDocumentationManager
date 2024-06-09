@@ -1,7 +1,7 @@
 ﻿using MedicalDocumentationManager.Domain.Implementation;
 using Microsoft.Extensions.Configuration;
 
-namespace MedicalDocumentationManager;
+namespace MedicalDocumentationManager.Presentation;
 
 public static class Program
 {

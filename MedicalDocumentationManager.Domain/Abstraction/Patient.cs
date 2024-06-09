@@ -8,10 +8,10 @@ public class Patient : User
     private readonly IMedicalRecordObserver _medicalRecordObserver;
     private readonly IMedicalRecordNotifier _medicalRecordNotifier;
 
-    public Patient(Guid id, string name, DateTime birthDate, Address address, string phoneNumber, string email,
+    public Patient(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email,
         string insuranceProvider, string insurancePolicyNumber, 
         IMedicalRecordObserver medicalRecordObserver, IMedicalRecordNotifier medicalRecordNotifier)
-        : base(id, name, birthDate, address, phoneNumber, email)
+        : base(id, fullName, birthDate, address, phoneNumber, email)
     {
         InsuranceProvider = insuranceProvider;
         InsurancePolicyNumber = insurancePolicyNumber;

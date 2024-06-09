@@ -1,10 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager", "MedicalDocumentationManager\MedicalDocumentationManager.csproj", "{5D6E30EB-952B-4A4A-819B-7F8F46DC37C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Persistence", "MedicalDocumentationManager.Persistence\MedicalDocumentationManager.Persistence.csproj", "{5D6E30EB-952B-4A4A-819B-7F8F46DC37C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Domain", "MedicalDocumentationManager.Domain\MedicalDocumentationManager.Domain.csproj", "{992325ED-F762-46EF-A2C7-F8A446B55335}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Domain.Tests", "MedicalDocumentationManager.Domain.Tests\MedicalDocumentationManager.Domain.Tests.csproj", "{F6413B56-5AEC-4CA7-8DC2-AB15E23AC481}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{91A124C7-ED48-4131-B9D1-4E28BFC06FC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{79CFCD11-780E-4699-BA4B-DAE972E1858B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Present", "MedicalDocumentationManager.Present\MedicalDocumentationManager.Present.csproj", "{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +30,15 @@ Global
 		{F6413B56-5AEC-4CA7-8DC2-AB15E23AC481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6413B56-5AEC-4CA7-8DC2-AB15E23AC481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6413B56-5AEC-4CA7-8DC2-AB15E23AC481}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{992325ED-F762-46EF-A2C7-F8A446B55335} = {91A124C7-ED48-4131-B9D1-4E28BFC06FC8}
+		{5D6E30EB-952B-4A4A-819B-7F8F46DC37C5} = {91A124C7-ED48-4131-B9D1-4E28BFC06FC8}
+		{F6413B56-5AEC-4CA7-8DC2-AB15E23AC481} = {79CFCD11-780E-4699-BA4B-DAE972E1858B}
+		{9F7AF36E-B8CD-4DB3-A816-E448F7D3ED55} = {91A124C7-ED48-4131-B9D1-4E28BFC06FC8}
 	EndGlobalSection
 EndGlobal

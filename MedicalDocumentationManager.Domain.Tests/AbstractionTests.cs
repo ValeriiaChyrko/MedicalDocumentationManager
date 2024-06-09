@@ -30,7 +30,7 @@ namespace MedicalDocumentationManager.Tests
             // Arrange
             var id = Guid.NewGuid();
             const string name = "Dr. Smith";
-            var birthDate = new DateTime(1980, 1, 1);
+            var birthDate = new DateOnly(1980, 1, 1);
             var address = new Address("123 Main St", "AnyTown", "CA", "12345");
             const string phoneNumber = "555-555-5555";
             const string email = "dr.smith@example.com";
@@ -44,13 +44,13 @@ namespace MedicalDocumentationManager.Tests
 
             // Assert
             doctor.Id.Should().Be(id);
-            doctor.Name.Should().Be(name);
+            doctor.FullName.Should().Be(name);
             doctor.BirthDate.Should().Be(birthDate);
             doctor.Address.Should().Be(address);
             doctor.PhoneNumber.Should().Be(phoneNumber);
             doctor.Email.Should().Be(email);
             doctor.Specialization.Should().Be(specialization);
-            doctor.Experience.Should().Be(experience);
+            doctor.ExperienceInYears.Should().Be(experience);
             doctor.Education.Should().Be(education);
             doctor.RoomNumber.Should().Be(roomNumber);
         }
@@ -100,7 +100,7 @@ namespace MedicalDocumentationManager.Tests
             // Arrange
             var id = Guid.NewGuid();
             const string name = "John Doe";
-            var birthDate = new DateTime(1990, 1, 1);
+            var birthDate = new DateOnly(1990, 1, 1);
             var address = new Address("123 Main St", "AnyTown", "USA", "12345");
             const string phoneNumber = "555-123-4567";
             const string email = "john.doe@example.com";
@@ -115,7 +115,7 @@ namespace MedicalDocumentationManager.Tests
 
             // Assert
             patient.Id.Should().Be(id);
-            patient.Name.Should().Be(name);
+            patient.FullName.Should().Be(name);
             patient.BirthDate.Should().Be(birthDate);
             patient.Address.Should().Be(address);
             patient.PhoneNumber.Should().Be(phoneNumber);

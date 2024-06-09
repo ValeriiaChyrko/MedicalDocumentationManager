@@ -22,7 +22,7 @@ public class PatientObserverTests
     {
         var id = Guid.NewGuid();
         const string name = "John Doe";
-        var birthDate = DateTime.Now;
+        var birthDate = new DateOnly(2000, 12, 01);
         var address = new Address("123 Main St", "AnyTown", "USA", "12345");
         const string phoneNumber = "555-1234";
         const string email = "johndoe@example.com";

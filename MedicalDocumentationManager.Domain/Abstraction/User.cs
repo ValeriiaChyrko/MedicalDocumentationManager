@@ -3,16 +3,16 @@
 public class User
 {
     public Guid Id { get; }
-    public string Name { get; }
-    public DateTime BirthDate { get; }
+    public string FullName { get; }
+    public DateOnly BirthDate { get; }
     public Address Address { get; }
     public string PhoneNumber { get; }
     public string Email { get; }
 
-    protected User(Guid id, string name, DateTime birthDate, Address address, string phoneNumber, string email)
+    protected User(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email)
     {
         Id = id;
-        Name = name;
+        FullName = fullName;
         BirthDate = birthDate;
         Address = address;
         PhoneNumber = phoneNumber;

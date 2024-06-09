@@ -138,7 +138,7 @@ public class MedicalRecordObserverTests
     {
         // Arrange
         var medicalRecord = MedicalRecord.Create(Guid.NewGuid(), Guid.NewGuid(), "Initial record");
-        var handler = new EventHandler<MessageEventArgs>((sender, args) => { });
+        var handler = new EventHandler<MessageEventArgs>((_, _) => { });
 
         // Act
         var result = medicalRecord.IsRegistered(handler);
