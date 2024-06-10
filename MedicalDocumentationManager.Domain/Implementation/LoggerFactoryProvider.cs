@@ -1,4 +1,5 @@
 ﻿using MedicalDocumentationManager.Domain.Abstraction;
+using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using Microsoft.Extensions.Configuration;
 
 namespace MedicalDocumentationManager.Domain.Implementation;

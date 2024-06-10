@@ -7,8 +7,8 @@ public class Doctor : User
     public string Education { get; }
     public string RoomNumber { get; }
 
-    public Doctor(Guid id, string name, DateOnly birthDate, Address address, string phoneNumber, string email, 
-        string specialization, uint experienceInYears, string education, string roomNumber) 
+    public Doctor(Guid id, string name, DateOnly birthDate, Address address, string phoneNumber, string email,
+        string specialization, uint experienceInYears, string education, string roomNumber)
         : base(id, name, birthDate, address, phoneNumber, email)
     {
         Specialization = specialization;

@@ -1,4 +1,6 @@
-﻿namespace MedicalDocumentationManager.Domain.Abstraction;
+﻿using MedicalDocumentationManager.Domain.Abstraction.Contracts;
+
+namespace MedicalDocumentationManager.Domain.Abstraction;
 
 public class Patient : User
 {
@@ -9,7 +11,7 @@ public class Patient : User
     private readonly IMedicalRecordNotifier _medicalRecordNotifier;
 
     public Patient(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email,
-        string insuranceProvider, string insurancePolicyNumber, 
+        string insuranceProvider, string insurancePolicyNumber,
         IMedicalRecordObserver medicalRecordObserver, IMedicalRecordNotifier medicalRecordNotifier)
         : base(id, fullName, birthDate, address, phoneNumber, email)
     {
@@ -28,7 +30,7 @@ public class Patient : User
     {
         _medicalRecordObserver.Unsubscribe();
     }
-    
+
     public void SubscribeToMedicalRecordNotifications()
     {
         _medicalRecordNotifier.Subscribe();

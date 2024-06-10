@@ -1,4 +1,5 @@
 ﻿using MedicalDocumentationManager.Domain.Abstraction;
+using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using MedicalDocumentationManager.Domain.Implementation;
 
 namespace MedicalDocumentationManager.Tests;
@@ -18,7 +19,8 @@ public class PatientObserverTests
         _medicalRecordNotifier = Substitute.For<MedicalRecordNotifier>(_medicalRecordObserver, _messageHandler);
     }
 
-    private Patient CreatePatient(IMedicalRecordObserver medicalRecordObserver, IMedicalRecordNotifier medicalRecordNotifier)
+    private Patient CreatePatient(IMedicalRecordObserver medicalRecordObserver,
+        IMedicalRecordNotifier medicalRecordNotifier)
     {
         var id = Guid.NewGuid();
         const string name = "John Doe";

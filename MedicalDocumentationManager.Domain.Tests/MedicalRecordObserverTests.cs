@@ -11,7 +11,7 @@ public class MedicalRecordObserverTests
     {
         // Act
         TestDelegate act = () => _ = new MedicalRecordObserver(null!);
-        
+
         // Assert
         Assert.Throws<ArgumentNullException>(act);
     }
@@ -36,8 +36,8 @@ public class MedicalRecordObserverTests
         observer.Subscribe();
 
         // Act
-        Action act = () => observer.Subscribe();
-        
+        var act = () => observer.Subscribe();
+
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is already subscribed*");
     }
@@ -50,8 +50,8 @@ public class MedicalRecordObserverTests
         var observer = new MedicalRecordObserver(record);
 
         // Act
-        Action act = () => observer.Unsubscribe();
-        
+        var act = () => observer.Unsubscribe();
+
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is not subscribed*");
     }
@@ -117,7 +117,7 @@ public class MedicalRecordObserverTests
         // Assert
         onNotifyEventInvoked.Should().BeTrue();
     }
-    
+
     [Test]
     public void IsRegistered_ReturnsTrue_WhenHandlerIsRegistered()
     {
@@ -132,7 +132,7 @@ public class MedicalRecordObserverTests
         // Assert
         result.Should().BeTrue();
     }
-    
+
     [Test]
     public void IsRegistered_ReturnsFalse_WhenHandlerIsNotRegistered()
     {

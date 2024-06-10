@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using MedicalDocumentationManager.Domain.Abstraction;
+using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using MedicalDocumentationManager.Domain.Implementation;
 
 namespace MedicalDocumentationManager.Tests;
@@ -15,7 +16,7 @@ public class MedicalRecordNotifierTests
 
         // Act
         Action act = () => _ = new MedicalRecordNotifier(null!, messageHandler);
-        
+
         // Assert
         act.Should().Throw<ArgumentNullException>();
     }
@@ -51,7 +52,7 @@ public class MedicalRecordNotifierTests
         // Assert
         recordObserver.Received(1).OnNotifyEvent -= Arg.Any<EventHandler<MessageEventArgs>>();
     }
-    
+
     [Test]
     public void Unsubscribe_ThrowsInvalidOperationException_WhenObserverIsNotSubscribed()
     {
@@ -62,12 +63,12 @@ public class MedicalRecordNotifierTests
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);
 
         // Act
-        Action act = () => notifier.Unsubscribe();
-        
+        var act = () => notifier.Unsubscribe();
+
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is not subscribed*");
     }
-    
+
     [Test]
     public void Subscribe_ThrowsInvalidOperationException_WhenObserverIsAlreadySubscribed()
     {
@@ -79,12 +80,12 @@ public class MedicalRecordNotifierTests
 
         // Act
         notifier.Subscribe();
-        Action act = () => notifier.Subscribe();
-        
+        var act = () => notifier.Subscribe();
+
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("*The observer is already subscribed*");
     }
-    
+
 
     [Test]
     public void Notify_ThrowsTargetInvocationException_WhenMessageIsNull()
@@ -95,13 +96,14 @@ public class MedicalRecordNotifierTests
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);
 
         // Act
-        var notifyMethod = typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
+        var notifyMethod =
+            typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
         Action act = () => notifyMethod?.Invoke(notifier, new object[] { null!, new MessageEventArgs(null!) });
 
         // Assert
         act.Should().Throw<TargetInvocationException>();
     }
-    
+
     [Test]
     public void Notify_ThrowsArgumentNullException_WhenMessageEventArgsIsNull()
     {
@@ -111,10 +113,12 @@ public class MedicalRecordNotifierTests
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);
 
         // Act
-        var notifyMethod = typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
+        var notifyMethod =
+            typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
         Action act = () => notifyMethod?.Invoke(notifier, new object[] { null!, null! });
         act.Should().Throw<TargetInvocationException>().Which.InnerException.Should().BeOfType<ArgumentNullException>();
-        act.Should().Throw<TargetInvocationException>().Which.InnerException?.Message.Should().Be("Value cannot be null. (Parameter 'messageEventArgs')");
+        act.Should().Throw<TargetInvocationException>().Which.InnerException?.Message.Should()
+            .Be("Value cannot be null. (Parameter 'messageEventArgs')");
     }
 
     [Test]
@@ -128,7 +132,8 @@ public class MedicalRecordNotifierTests
 
         // Act
         notifier.Subscribe();
-        var notifyMethod = typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
+        var notifyMethod =
+            typeof(MedicalRecordNotifier).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance);
         notifyMethod?.Invoke(notifier, new object[] { null!, new MessageEventArgs(message) });
 
         // Assert

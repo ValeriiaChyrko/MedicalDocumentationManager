@@ -72,7 +72,8 @@ public class ConcreteLoggerTests
         logger.Log(additionalMessage);
 
         // Assert
-        File.ReadAllText(filePath).Should().Be(initialMessage + Environment.NewLine + additionalMessage + Environment.NewLine);
+        File.ReadAllText(filePath).Should()
+            .Be(initialMessage + Environment.NewLine + additionalMessage + Environment.NewLine);
         File.Delete(filePath);
     }
 
@@ -90,7 +91,8 @@ public class ConcreteLoggerTests
         logger.Log(additionalMessage);
 
         // Assert
-        File.ReadAllText(filePath).Should().Be(initialMessage + Environment.NewLine + additionalMessage + Environment.NewLine);
+        File.ReadAllText(filePath).Should()
+            .Be(initialMessage + Environment.NewLine + additionalMessage + Environment.NewLine);
         File.Delete(filePath);
     }
 
