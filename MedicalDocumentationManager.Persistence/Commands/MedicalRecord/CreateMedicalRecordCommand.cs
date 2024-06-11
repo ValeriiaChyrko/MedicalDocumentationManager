@@ -1,0 +1,5 @@
+﻿using MedicalDocumentationManager.DTOs.RequestsDTOs;
+
+namespace MedicalDocumentationManager.Persistence.Commands.MedicalRecord;
+
+public sealed record CreateMedicalRecordCommand(RequestMedicalRecordDto RequestMedicalRecordDto);

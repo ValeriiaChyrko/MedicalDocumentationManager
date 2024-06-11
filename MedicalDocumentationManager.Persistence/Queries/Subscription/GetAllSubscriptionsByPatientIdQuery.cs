@@ -1,0 +1,3 @@
+﻿namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
+
+public record GetAllSubscriptionsByPatientIdQuery(Guid PatientId);
