@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MedicalDocumentationManager.Database\MedicalDocumentationManager.Database.csproj" />
-      <ProjectReference Include="..\MedicalDocumentationManager.DTOs\MedicalDocumentationManager.DTOs.csproj" />
+        <ProjectReference Include="..\MedicalDocumentationManager.Database\MedicalDocumentationManager.Database.csproj"/>
+        <ProjectReference Include="..\MedicalDocumentationManager.DTOs\MedicalDocumentationManager.DTOs.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
 
-public sealed class GetAllSubscriptionsByPatientIdQueryHandler 
+public sealed class GetAllSubscriptionsByPatientIdQueryHandler
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;

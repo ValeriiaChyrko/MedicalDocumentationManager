@@ -11,9 +11,9 @@ public class PatientMappingProfile : Profile
     {
         CreateMap<RequestPatientDto, PatientEntity>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
-            .ForMember(dest => dest.AddressEntity, opt => opt.Ignore()) 
-            .ForMember(dest => dest.MedicalRecords, opt => opt.Ignore()); 
-        
+            .ForMember(dest => dest.AddressEntity, opt => opt.Ignore())
+            .ForMember(dest => dest.MedicalRecords, opt => opt.Ignore());
+
         CreateMap<PatientEntity, RespondPatientDto>();
     }
 }

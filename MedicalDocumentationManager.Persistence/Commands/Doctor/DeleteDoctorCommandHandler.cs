@@ -1,4 +1,5 @@
 ﻿using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Doctor;
@@ -17,6 +18,6 @@ public sealed class DeleteDoctorCommandHandler
         await _context
             .DoctorEntities
             .Where(t => t.Id == command.Id)
-            .ExecuteDeleteAsync(cancellationToken: cancellationToken);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

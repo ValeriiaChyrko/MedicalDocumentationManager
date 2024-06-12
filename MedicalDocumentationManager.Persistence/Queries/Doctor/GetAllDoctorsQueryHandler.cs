@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Doctor;
 
-public sealed class GetAllDoctorsQueryHandler 
+public sealed class GetAllDoctorsQueryHandler
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;
@@ -16,7 +17,8 @@ public sealed class GetAllDoctorsQueryHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<IEnumerable<RespondDoctorDto>> Handle(GetAllDoctorsQuery query, CancellationToken cancellationToken)
+    public async Task<IEnumerable<RespondDoctorDto>> Handle(GetAllDoctorsQuery query,
+        CancellationToken cancellationToken)
     {
         var doctors = await _context
             .DoctorEntities

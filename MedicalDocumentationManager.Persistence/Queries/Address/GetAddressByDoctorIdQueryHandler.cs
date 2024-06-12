@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ public sealed class GetAddressByDoctorIdQueryHandler
             .Include(a => a.Doctors)
             .FirstOrDefaultAsync(a =>
                     a.Doctors != null &&
-                    a.Doctors.Any(p => p.Id == query.Id), 
+                    a.Doctors.Any(p => p.Id == query.Id),
                 cancellationToken);
 
         return addressEntity != null ? _mapper.Map<RespondAddressDto>(addressEntity) : null;

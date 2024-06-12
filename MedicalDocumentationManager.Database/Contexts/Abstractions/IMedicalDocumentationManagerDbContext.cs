@@ -1,7 +1,7 @@
 ﻿using MedicalDocumentationManager.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedicalDocumentationManager.Database.Contexts;
+namespace MedicalDocumentationManager.Database.Contexts.Abstractions;
 
 public interface IMedicalDocumentationManagerDbContext
 {

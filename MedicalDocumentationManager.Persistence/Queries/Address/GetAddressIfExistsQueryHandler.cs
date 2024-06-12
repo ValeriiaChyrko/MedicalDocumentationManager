@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,12 +21,12 @@ public sealed class GetAllAddressesQueryHandler
     {
         var addressEntity = await _context.AddressEntities
             .FirstOrDefaultAsync(a =>
-                a.Street == query.RequestAddressDto.Street &&
-                a.City == query.RequestAddressDto.City &&
-                a.State == query.RequestAddressDto.State &&
-                a.Zip == query.RequestAddressDto.Zip, 
-                cancellationToken: cancellationToken);
-        
+                    a.Street == query.RequestAddressDto.Street &&
+                    a.City == query.RequestAddressDto.City &&
+                    a.State == query.RequestAddressDto.State &&
+                    a.Zip == query.RequestAddressDto.Zip,
+                cancellationToken);
+
         return addressEntity != null ? _mapper.Map<RespondAddressDto>(addressEntity) : null;
     }
 }

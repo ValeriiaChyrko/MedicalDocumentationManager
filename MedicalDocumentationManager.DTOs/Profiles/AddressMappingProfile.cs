@@ -10,8 +10,8 @@ public class AddressMappingProfile : Profile
     public AddressMappingProfile()
     {
         CreateMap<RequestAddressDto, AddressEntity>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) 
-            .ForMember(dest => dest.Patients, opt => opt.Ignore()) 
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Patients, opt => opt.Ignore())
             .ForMember(dest => dest.Doctors, opt => opt.Ignore());
 
         CreateMap<AddressEntity, RespondAddressDto>();

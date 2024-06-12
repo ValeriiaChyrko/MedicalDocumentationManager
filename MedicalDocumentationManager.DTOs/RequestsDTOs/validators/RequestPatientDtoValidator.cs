@@ -5,12 +5,13 @@ namespace MedicalDocumentationManager.DTOs.RequestsDTOs.validators;
 public class RequestPatientDtoValidator : AbstractValidator<RequestPatientDto>
 {
     private const int MaxLengthTextPropertyLength = 255;
-        
+
     public RequestPatientDtoValidator()
     {
         RuleFor(dto => dto.FullName)
             .NotEmpty().WithMessage("Full name cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Full name cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Full name cannot exceed {MaxLengthTextPropertyLength} characters.");
 
         RuleFor(dto => dto.BirthDate)
             .NotEmpty().WithMessage("Birth date cannot be empty.")
@@ -27,16 +28,18 @@ public class RequestPatientDtoValidator : AbstractValidator<RequestPatientDto>
         RuleFor(dto => dto.Email)
             .NotEmpty().WithMessage("Email cannot be empty.")
             .EmailAddress().WithMessage("Invalid email format.");
-        
+
         RuleFor(dto => dto.InsuranceProvider)
             .NotEmpty().WithMessage("Insurance provider cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Insurance provider cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Insurance provider cannot exceed {MaxLengthTextPropertyLength} characters.");
 
         RuleFor(dto => dto.InsurancePolicyNumber)
             .NotEmpty().WithMessage("Insurance policy number cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Insurance policy number cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Insurance policy number cannot exceed {MaxLengthTextPropertyLength} characters.");
     }
-    
+
     private bool BeValidBirthDate(DateOnly birthDate)
     {
         return birthDate < DateOnly.FromDateTime(DateTime.Today);

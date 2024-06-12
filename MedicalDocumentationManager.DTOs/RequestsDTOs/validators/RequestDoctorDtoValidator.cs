@@ -6,12 +6,13 @@ public class RequestDoctorDtoValidator : AbstractValidator<RequestDoctorDto>
 {
     private const int MaxLengthTextPropertyLength = 255;
     private const int MaxLengthRoomNumberPropertyLength = 15;
-        
+
     public RequestDoctorDtoValidator()
     {
         RuleFor(dto => dto.FullName)
             .NotEmpty().WithMessage("Full name cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Full name cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Full name cannot exceed {MaxLengthTextPropertyLength} characters.");
 
         RuleFor(dto => dto.BirthDate)
             .NotEmpty().WithMessage("Birth date cannot be empty.")
@@ -31,7 +32,8 @@ public class RequestDoctorDtoValidator : AbstractValidator<RequestDoctorDto>
 
         RuleFor(dto => dto.Specialization)
             .NotEmpty().WithMessage("Specialization cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Specialization cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Specialization cannot exceed {MaxLengthTextPropertyLength} characters.");
 
         RuleFor(dto => dto.ExperienceInYears)
             .NotEmpty().WithMessage("Experience in years cannot be empty.")
@@ -39,13 +41,15 @@ public class RequestDoctorDtoValidator : AbstractValidator<RequestDoctorDto>
 
         RuleFor(dto => dto.Education)
             .NotEmpty().WithMessage("Education cannot be empty.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"Education cannot exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"Education cannot exceed {MaxLengthTextPropertyLength} characters.");
 
         RuleFor(dto => dto.RoomNumber)
             .NotEmpty().WithMessage("Room number cannot be empty.")
-            .MaximumLength(MaxLengthRoomNumberPropertyLength).WithMessage($"Room number cannot exceed {MaxLengthRoomNumberPropertyLength} characters.");
+            .MaximumLength(MaxLengthRoomNumberPropertyLength)
+            .WithMessage($"Room number cannot exceed {MaxLengthRoomNumberPropertyLength} characters.");
     }
-    
+
     private bool BeValidBirthDate(DateOnly birthDate)
     {
         return birthDate < DateOnly.FromDateTime(DateTime.Today);

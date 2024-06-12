@@ -5,7 +5,7 @@ namespace MedicalDocumentationManager.DTOs.RequestsDTOs.validators;
 public class RequestMedicalRecordDtoValidator : AbstractValidator<RequestMedicalRecordDto>
 {
     private const int MaxLengthRecordPropertyLength = 512;
-    
+
     public RequestMedicalRecordDtoValidator()
     {
         RuleFor(x => x.PatientId)
@@ -18,7 +18,8 @@ public class RequestMedicalRecordDtoValidator : AbstractValidator<RequestMedical
 
         RuleFor(x => x.Record)
             .NotEmpty().WithMessage("Record is required.")
-            .MaximumLength(MaxLengthRecordPropertyLength).WithMessage($"Record must not exceed {MaxLengthRecordPropertyLength} characters.");
+            .MaximumLength(MaxLengthRecordPropertyLength)
+            .WithMessage($"Record must not exceed {MaxLengthRecordPropertyLength} characters.");
 
         RuleFor(x => x.CreatedAt)
             .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("CreatedAt cannot be in the future.");

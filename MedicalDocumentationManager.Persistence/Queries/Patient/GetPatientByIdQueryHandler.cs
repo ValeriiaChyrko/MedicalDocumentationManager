@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Patient;
@@ -18,7 +19,7 @@ public sealed class GetPatientByIdQueryHandler
     public async Task<RespondPatientDto?> Handle(GetPatientByIdQuery query, CancellationToken cancellationToken)
     {
         var patientEntity = await _context.PatientEntities.FindAsync(new object[] { query.Id }, cancellationToken);
-        
+
         return patientEntity != null ? _mapper.Map<RespondPatientDto>(patientEntity) : null;
     }
 }

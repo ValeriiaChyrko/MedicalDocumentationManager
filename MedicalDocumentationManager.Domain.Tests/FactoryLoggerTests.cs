@@ -2,7 +2,7 @@
 using MedicalDocumentationManager.Domain.Implementation;
 using Microsoft.Extensions.Configuration;
 
-namespace MedicalDocumentationManager.Tests;
+namespace MedicalDocumentationManager.Domain.Tests;
 
 [TestFixture]
 public class FactoryLoggerTests

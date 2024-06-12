@@ -5,7 +5,7 @@ namespace MedicalDocumentationManager.DTOs.RequestsDTOs.validators;
 public class RequestSubscriptionDtoValidator : AbstractValidator<RequestSubscriptionDto>
 {
     private const int MaxLengthTextPropertyLength = 50;
-    
+
     public RequestSubscriptionDtoValidator()
     {
         RuleFor(x => x.PatientId)
@@ -18,6 +18,7 @@ public class RequestSubscriptionDtoValidator : AbstractValidator<RequestSubscrip
 
         RuleFor(x => x.SubscriptionType)
             .NotEmpty().WithMessage("SubscriptionType is required.")
-            .MaximumLength(MaxLengthTextPropertyLength).WithMessage($"SubscriptionType must not exceed {MaxLengthTextPropertyLength} characters.");
+            .MaximumLength(MaxLengthTextPropertyLength)
+            .WithMessage($"SubscriptionType must not exceed {MaxLengthTextPropertyLength} characters.");
     }
 }

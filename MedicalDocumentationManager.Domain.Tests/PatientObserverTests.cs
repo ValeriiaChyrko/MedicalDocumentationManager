@@ -2,7 +2,7 @@
 using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using MedicalDocumentationManager.Domain.Implementation;
 
-namespace MedicalDocumentationManager.Tests;
+namespace MedicalDocumentationManager.Domain.Tests;
 
 [TestFixture]
 public class PatientObserverTests

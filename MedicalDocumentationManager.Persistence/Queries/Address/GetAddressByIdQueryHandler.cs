@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Address;
@@ -18,7 +19,7 @@ public sealed class GetAddressByIdQueryHandler
     public async Task<RespondAddressDto?> Handle(GetAddressByIdQuery query, CancellationToken cancellationToken)
     {
         var addressEntity = await _context.AddressEntities.FindAsync(new object[] { query.Id }, cancellationToken);
-        
+
         return addressEntity != null ? _mapper.Map<RespondAddressDto>(addressEntity) : null;
     }
 }

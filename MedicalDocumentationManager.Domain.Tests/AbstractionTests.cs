@@ -1,7 +1,7 @@
 ﻿using MedicalDocumentationManager.Domain.Abstraction;
 using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 
-namespace MedicalDocumentationManager.Tests;
+namespace MedicalDocumentationManager.Domain.Tests;
 
 [TestFixture]
 public class AbstractionTests

@@ -1,23 +1,15 @@
-﻿using MedicalDocumentationManager.Database.Contexts.Configurations.DataSeeds;
+﻿using MedicalDocumentationManager.Database.Contexts.Abstractions;
+using MedicalDocumentationManager.Database.Contexts.Configurations.DataSeeds;
 using MedicalDocumentationManager.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
-namespace MedicalDocumentationManager.Database.Contexts;
+namespace MedicalDocumentationManager.Database.Contexts.Implementations;
 
 public class MedicalDocumentationManagerDbContext : DbContext, IMedicalDocumentationManagerDbContext
 {
-    private readonly IConfiguration _configuration;
-
-    public MedicalDocumentationManagerDbContext(IConfiguration configuration)
+    public MedicalDocumentationManagerDbContext(DbContextOptions<MedicalDocumentationManagerDbContext> options)
+        : base(options)
     {
-        _configuration = configuration;
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

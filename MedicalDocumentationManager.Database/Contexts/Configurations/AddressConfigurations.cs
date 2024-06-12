@@ -19,7 +19,7 @@ internal class AddressConfigurations : IEntityTypeConfiguration<AddressEntity>
             .WithOne(a => a.AddressEntity)
             .HasForeignKey(d => d.AddressId)
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         builder
             .HasIndex(a => new { a.Street, a.City, a.State, a.Zip })
             .IsUnique();
