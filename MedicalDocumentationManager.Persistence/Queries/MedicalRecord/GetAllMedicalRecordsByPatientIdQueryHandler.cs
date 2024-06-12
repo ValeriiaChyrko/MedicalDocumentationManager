@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MedicalDocumentationManager.Database.Contexts;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ public sealed class GetAllMedicalRecordsByPatientIdQueryHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<IEnumerable<RespondDoctorDto>> Handle(GetAllMedicalRecordsByPatientIdQuery query,
+    public async Task<IEnumerable<RespondMedicalRecordDto>> Handle(GetAllMedicalRecordsByPatientIdQuery query,
         CancellationToken cancellationToken)
     {
         var medicalRecords = await _context
@@ -26,6 +25,6 @@ public sealed class GetAllMedicalRecordsByPatientIdQueryHandler
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return medicalRecords.Select(entityModel => _mapper.Map<RespondDoctorDto>(entityModel)).ToList();
+        return medicalRecords.Select(entityModel => _mapper.Map<RespondMedicalRecordDto>(entityModel)).ToList();
     }
 }

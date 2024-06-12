@@ -2,12 +2,12 @@
 
 public class RespondPatientDto
 {
-    public required Guid Id { get; init; }
-    public required string FullName { get; init; }
-    public DateOnly BirthDate { get; init; }
-    public long AddressId { get; init; }
-    public required string PhoneNumber { get; init; }
-    public required string Email { get; init; }
-    public required string InsuranceProvider { get; init; }
-    public required string InsurancePolicyNumber { get; init; }
+    public required Guid Id { get; set; }
+    public required string FullName { get; set; }
+    public DateOnly BirthDate { get; set; }
+    public long AddressId { get; set; }
+    public required string PhoneNumber { get; set; }
+    public required string Email { get; set; }
+    public required string InsuranceProvider { get; set; }
+    public required string InsurancePolicyNumber { get; set; }
 }

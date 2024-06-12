@@ -2,9 +2,9 @@
 
 public class RespondAddressDto
 {
-    public long Id { get; init; }
-    public string Street { get; } = null!;
-    public string City { get; } = null!;
-    public string State { get; } = null!;
-    public string Zip { get; } = null!;
+    public long Id { get; set; }
+    public required string Street { get; set; }
+    public required string City { get; set; } 
+    public required string State { get; set; }
+    public required string Zip { get; set; }
 }

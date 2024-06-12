@@ -2,10 +2,10 @@
 
 public class RespondMedicalRecordDto
 {
-    public Guid Id { get; init; }
-    public Guid PatientId { get; init; }
-    public Guid DoctorId { get; init; }
-    public required string Record { get; init; }
-    public DateTime CreatedAt { get; init; }
-    public DateTime UpdatedAt { get; init; }
+    public Guid Id { get; set; }
+    public Guid PatientId { get; set; }
+    public Guid DoctorId { get; set; }
+    public required string Record { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }
