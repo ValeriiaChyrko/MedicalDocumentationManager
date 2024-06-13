@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.DTOs.RequestsDTOs.validators;
 
-public class RequestSubscriptionDtoValidator : AbstractValidator<RequestSubscriptionDto>
+public class RequestSubscriptionDtoValidator : AbstractValidator<SubscriptionDto>
 {
     private const int MaxLengthTextPropertyLength = 50;
 

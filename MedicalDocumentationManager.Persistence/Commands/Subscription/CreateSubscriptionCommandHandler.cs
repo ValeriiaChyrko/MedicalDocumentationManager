@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Subscription;
 
@@ -16,7 +16,7 @@ public sealed class CreateSubscriptionCommandHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<RespondSubscriptionDto> Handle(CreateSubscriptionCommand command,
+    public async Task<SubscriptionDto> Handle(CreateSubscriptionCommand command,
         CancellationToken cancellationToken)
     {
         if (command is null)
@@ -24,10 +24,10 @@ public sealed class CreateSubscriptionCommandHandler
             throw new ArgumentNullException(nameof(command));
         }
         
-        var subscriptionEntity = _mapper.Map<SubscriptionEntity>(command.RequestSubscriptionDto);
+        var subscriptionEntity = _mapper.Map<SubscriptionEntity>(command.SubscriptionDto);
         var addedEntity = await _context.SubscriptionEntities.AddAsync(subscriptionEntity, cancellationToken);
         _context.DetachEntity(subscriptionEntity);
 
-        return _mapper.Map<RespondSubscriptionDto>(addedEntity.Entity);
+        return _mapper.Map<SubscriptionDto>(addedEntity.Entity);
     }
 }

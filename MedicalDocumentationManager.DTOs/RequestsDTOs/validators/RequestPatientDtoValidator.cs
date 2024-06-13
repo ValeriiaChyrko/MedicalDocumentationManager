@@ -17,9 +17,9 @@ public class RequestPatientDtoValidator : AbstractValidator<RequestPatientDto>
             .NotEmpty().WithMessage("Birth date cannot be empty.")
             .Must(BeValidBirthDate).WithMessage("Birth date must be before the current date.");
 
-        RuleFor(dto => dto.AddressId)
-            .NotEmpty().WithMessage("Address ID cannot be empty.")
-            .GreaterThan(0).WithMessage("Address ID must be greater than zero.");
+        RuleFor(p => p.Address)
+            .NotNull().WithMessage("Address cannot be null.")
+            .SetValidator(new RequestAddressDtoValidator());
 
         RuleFor(dto => dto.PhoneNumber)
             .NotEmpty().WithMessage("Phone number cannot be empty.")

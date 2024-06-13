@@ -24,7 +24,10 @@ public sealed class CreatePatientCommandHandler
         }
         
         var patientEntity = _mapper.Map<PatientEntity>(command.RequestPatientDto);
-        var addedEntity = await _context.PatientEntities.AddAsync(patientEntity, cancellationToken);
+        patientEntity.AddressId = command.AddressId;
+        
+        var addedEntity = await _context.PatientEntities
+            .AddAsync(patientEntity, cancellationToken);
         _context.DetachEntity(patientEntity);
 
         return _mapper.Map<RespondPatientDto>(addedEntity.Entity);

@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.DTOs.RequestsDTOs.validators;
 
-public class RequestAddressDtoValidator : AbstractValidator<RequestAddressDto>
+public class RequestAddressDtoValidator : AbstractValidator<AddressDto>
 {
     private const int MaxLengthPropertyLength = 255;
 

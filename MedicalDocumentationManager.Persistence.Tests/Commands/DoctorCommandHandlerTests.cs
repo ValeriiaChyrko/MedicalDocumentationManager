@@ -44,13 +44,16 @@ public class DoctorCommandHandlerTests
             new RequestDoctorDto
             {
                 FullName = "Test Doctor 1",
+                BirthDate = new DateOnly(199, 10, 01),
                 PhoneNumber = "123-456-7890",
                 Email = "test1@example.com",
                 Specialization = "Test Specialization",
                 ExperienceInYears = 5,
                 Education = "Test Education",
-                RoomNumber = "101"
-            }
+                RoomNumber = "101",
+                Address = null!
+            },
+            0
         );
 
         // Act
@@ -79,7 +82,7 @@ public class DoctorCommandHandlerTests
     {
         // Arrange
         var handler = new CreateDoctorCommandHandler(_context, _mapper);
-        var command = new CreateDoctorCommand(null!);
+        var command = new CreateDoctorCommand(null!, 0);
             
         // Act
         Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
@@ -148,8 +151,10 @@ public class DoctorCommandHandlerTests
                 Specialization = "Old Specialization",
                 ExperienceInYears = 5,
                 Education = "Old Education",
-                RoomNumber = "101"
-            }
+                RoomNumber = "101",
+                Address = null!
+            },
+            0
         );
             
         var resultCreate = await handlerCreate.Handle(commandCreate, CancellationToken.None);
@@ -161,14 +166,16 @@ public class DoctorCommandHandlerTests
             resultCreate.Id,
             new RequestDoctorDto
             {
-                FullName ="Updated Doctor",
+                FullName = "Updated Doctor",
                 PhoneNumber = "123-456-7890",
                 Email = "updated@example.com",
                 Specialization = "Updated Specialization",
                 ExperienceInYears = 10,
                 Education = "Updated Education",
-                RoomNumber = "202"
-            }
+                RoomNumber = "202",
+                Address = null!
+            },
+            0
         );
 
         // Act
@@ -197,7 +204,7 @@ public class DoctorCommandHandlerTests
     {
         // Arrange
         var handler = new UpdateDoctorCommandHandler(_context, _mapper);
-        var command = new UpdateDoctorCommand(Guid.NewGuid(), null!);
+        var command = new UpdateDoctorCommand(Guid.NewGuid(), null!, 0);
 
         // Act
         var act = async () => await handler.Handle(command);

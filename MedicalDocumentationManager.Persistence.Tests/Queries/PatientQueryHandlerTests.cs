@@ -34,7 +34,7 @@ public class PatientQueryHandlerTests
         InsuranceProvider = "Health Net",
         AddressId = int.MaxValue
     };
-    
+
     [SetUp]
     public void SetUp()
     {

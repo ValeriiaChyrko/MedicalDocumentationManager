@@ -2,7 +2,7 @@
 using MedicalDocumentationManager.Database.Contexts.Implementations;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.Profiles;
-using MedicalDocumentationManager.DTOs.RequestsDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Address;
 
 namespace MedicalDocumentationManager.Persistence.Tests.Queries;
@@ -77,7 +77,7 @@ public class AddressQueryHandlerTests
     {
         // Arrange
         var handler = new GetAllAddressesQueryHandler(_context, _mapper);
-        var query = new GetAddressIfExistsQuery(new RequestAddressDto
+        var query = new GetAddressIfExistsQuery(new AddressDto
         {
             Street = _seedDataAddress.Street,
             City = _seedDataAddress.City,
@@ -102,7 +102,7 @@ public class AddressQueryHandlerTests
     {
         // Arrange
         var handler = new GetAllAddressesQueryHandler(_context, _mapper);
-        var query = new GetAddressIfExistsQuery(new RequestAddressDto
+        var query = new GetAddressIfExistsQuery(new AddressDto
         {
             Street = "Non-Existing Street",
             City = "Non-Existing City",

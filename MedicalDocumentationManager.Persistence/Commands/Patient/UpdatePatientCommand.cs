@@ -2,4 +2,4 @@
 
 namespace MedicalDocumentationManager.Persistence.Commands.Patient;
 
-public sealed record UpdatePatientCommand(Guid Id, RequestPatientDto RequestPatientDto);
+public sealed record UpdatePatientCommand(Guid Id, RequestPatientDto RequestPatientDto, long AddressId);

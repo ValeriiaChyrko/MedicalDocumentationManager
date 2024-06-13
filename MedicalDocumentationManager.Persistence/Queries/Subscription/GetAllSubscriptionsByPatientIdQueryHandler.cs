@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
@@ -16,7 +16,7 @@ public sealed class GetAllSubscriptionsByPatientIdQueryHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<IEnumerable<RespondSubscriptionDto>> Handle(GetAllSubscriptionsByPatientIdQuery query,
+    public async Task<IEnumerable<SubscriptionDto>> Handle(GetAllSubscriptionsByPatientIdQuery query,
         CancellationToken cancellationToken)
     {
         var subscriptionEntities = await _context
@@ -25,6 +25,6 @@ public sealed class GetAllSubscriptionsByPatientIdQueryHandler
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return subscriptionEntities.Select(entityModel => _mapper.Map<RespondSubscriptionDto>(entityModel)).ToList();
+        return subscriptionEntities.Select(entityModel => _mapper.Map<SubscriptionDto>(entityModel)).ToList();
     }
 }

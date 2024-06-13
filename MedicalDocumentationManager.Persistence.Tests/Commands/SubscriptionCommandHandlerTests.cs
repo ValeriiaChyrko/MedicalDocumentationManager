@@ -2,8 +2,7 @@
 using MedicalDocumentationManager.Database.Contexts.Implementations;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.Profiles;
-using MedicalDocumentationManager.DTOs.RequestsDTOs;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using MedicalDocumentationManager.Persistence.Commands.Subscription;
 
 namespace MedicalDocumentationManager.Persistence.Tests.Commands;
@@ -71,7 +70,7 @@ public class SubscriptionCommandHandlerTests
     {
         // Arrange
         var handler = new CreateSubscriptionCommandHandler(_context, _mapper);
-        var command = new CreateSubscriptionCommand(new RequestSubscriptionDto
+        var command = new CreateSubscriptionCommand(new SubscriptionDto
         {
             SubscriptionType = SeedDataSubscription1.SubscriptionType,
             PatientId = SeedDataSubscription1.PatientEntity.Id,
@@ -83,9 +82,9 @@ public class SubscriptionCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.SubscriptionType.Should().Be(command.RequestSubscriptionDto.SubscriptionType);
-        result.PatientId.Should().Be(command.RequestSubscriptionDto.PatientId);
-        result.MedicalRecordId.Should().Be(command.RequestSubscriptionDto.MedicalRecordId);
+        result.SubscriptionType.Should().Be(command.SubscriptionDto.SubscriptionType);
+        result.PatientId.Should().Be(command.SubscriptionDto.PatientId);
+        result.MedicalRecordId.Should().Be(command.SubscriptionDto.MedicalRecordId);
     }
 
     [Test]
@@ -177,7 +176,7 @@ public class SubscriptionCommandHandlerTests
     {
         // Arrange
         var handler = new UpdateSubscriptionCommandHandler(_context, _mapper);
-        var createCommand = new CreateSubscriptionCommand(new RequestSubscriptionDto
+        var createCommand = new CreateSubscriptionCommand(new SubscriptionDto
         {
             SubscriptionType = SeedDataSubscription1.SubscriptionType,
             PatientId = SeedDataSubscription1.PatientEntity.Id,
@@ -186,7 +185,7 @@ public class SubscriptionCommandHandlerTests
         var createdSubscription = await new CreateSubscriptionCommandHandler(_context, _mapper).Handle(createCommand, CancellationToken.None);
         await _context.SaveChangesAsync();
         
-        var updateCommand = new UpdateSubscriptionCommand(createdSubscription.Id, new RequestSubscriptionDto
+        var updateCommand = new UpdateSubscriptionCommand(createdSubscription.Id, new SubscriptionDto
         {
             SubscriptionType = "Updated Notifier",
             PatientId = createdSubscription.PatientId,
@@ -198,9 +197,9 @@ public class SubscriptionCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.SubscriptionType.Should().Be(updateCommand.RequestSubscriptionDto.SubscriptionType);
-        result.PatientId.Should().Be(updateCommand.RequestSubscriptionDto.PatientId);
-        result.MedicalRecordId.Should().Be(updateCommand.RequestSubscriptionDto.MedicalRecordId);
+        result.SubscriptionType.Should().Be(updateCommand.SubscriptionDto.SubscriptionType);
+        result.PatientId.Should().Be(updateCommand.SubscriptionDto.PatientId);
+        result.MedicalRecordId.Should().Be(updateCommand.SubscriptionDto.MedicalRecordId);
     }
 
     [Test]
@@ -210,7 +209,7 @@ public class SubscriptionCommandHandlerTests
         var handler = new UpdateSubscriptionCommandHandler(_context, _mapper);
 
         // Act
-        Func<Task<RespondSubscriptionDto>> act = async () => await handler.Handle(null!);
+        Func<Task<SubscriptionDto>> act = async () => await handler.Handle(null!);
 
         // Assert
         act.Should().ThrowAsync<ArgumentNullException>();
@@ -224,7 +223,7 @@ public class SubscriptionCommandHandlerTests
         var command = new UpdateSubscriptionCommand(1, null!);
 
         // Act
-        Func<Task<RespondSubscriptionDto>> act = async () => await handler.Handle(command);
+        Func<Task<SubscriptionDto>> act = async () => await handler.Handle(command);
 
         // Assert
         act.Should().ThrowAsync<ArgumentNullException>();

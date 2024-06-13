@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Address;
@@ -16,16 +16,16 @@ public sealed class GetAllAddressesQueryHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<RespondAddressDto?> Handle(GetAddressIfExistsQuery query, CancellationToken cancellationToken)
+    public async Task<AddressDto?> Handle(GetAddressIfExistsQuery query, CancellationToken cancellationToken)
     {
         var addressEntity = await _context.AddressEntities
             .FirstOrDefaultAsync(a =>
-                    a.Street == query.RequestAddressDto.Street &&
-                    a.City == query.RequestAddressDto.City &&
-                    a.State == query.RequestAddressDto.State &&
-                    a.Zip == query.RequestAddressDto.Zip,
+                    a.Street == query.AddressDto.Street &&
+                    a.City == query.AddressDto.City &&
+                    a.State == query.AddressDto.State &&
+                    a.Zip == query.AddressDto.Zip,
                 cancellationToken);
 
-        return addressEntity != null ? _mapper.Map<RespondAddressDto>(addressEntity) : null;
+        return addressEntity != null ? _mapper.Map<AddressDto>(addressEntity) : null;
     }
 }

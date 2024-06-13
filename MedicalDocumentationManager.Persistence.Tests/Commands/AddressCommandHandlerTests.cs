@@ -2,7 +2,7 @@
 using MedicalDocumentationManager.Database.Contexts.Implementations;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.Profiles;
-using MedicalDocumentationManager.DTOs.RequestsDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using MedicalDocumentationManager.Persistence.Commands.Address;
 
 namespace MedicalDocumentationManager.Persistence.Tests.Commands;
@@ -41,7 +41,7 @@ public class AddressCommandHandlerTests
         var handler = new CreateAddressCommandHandler(_context, _mapper);
         var command = new CreateAddressCommand
         (
-            new RequestAddressDto
+            new AddressDto
             {
                 Street = "123 Main St",
                 City = "Anytown",
@@ -55,7 +55,10 @@ public class AddressCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(command.RequestAddressDto);
+        result.Street.Should().Be(command.AddressDto.Street);
+        result.City.Should().Be(command.AddressDto.City);
+        result.State.Should().Be(command.AddressDto.State);
+        result.Zip.Should().Be(command.AddressDto.Zip);
     }
 
     [Test]
@@ -133,7 +136,7 @@ public class AddressCommandHandlerTests
         var handlerCreate = new CreateAddressCommandHandler(_context, _mapper);
         var commandCreate = new CreateAddressCommand
         (
-            new RequestAddressDto
+            new AddressDto
             {
                 Street = "123 Main St",
                 City = "Oldtown",
@@ -149,7 +152,7 @@ public class AddressCommandHandlerTests
         var commandUpdate = new UpdateAddressCommand
         (
             resultCreate.Id,
-            new RequestAddressDto
+            new AddressDto
             {
                 Street = "456 Main St",
                 City = "Newtown",
@@ -163,7 +166,10 @@ public class AddressCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(commandUpdate.RequestAddressDto);
+        result.Street.Should().Be(commandUpdate.AddressDto.Street);
+        result.City.Should().Be(commandUpdate.AddressDto.City);
+        result.State.Should().Be(commandUpdate.AddressDto.State);
+        result.Zip.Should().Be(commandUpdate.AddressDto.Zip);
     }
 
     [Test]

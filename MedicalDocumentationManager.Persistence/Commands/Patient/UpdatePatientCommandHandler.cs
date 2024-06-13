@@ -16,7 +16,7 @@ public sealed class UpdatePatientCommandHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public Task<RespondPatientDto> Handle(UpdatePatientCommand command, CancellationToken cancellationToken)
+    public Task<RespondPatientDto> Handle(UpdatePatientCommand command)
     {
         if (command is null)
         {
@@ -25,6 +25,7 @@ public sealed class UpdatePatientCommandHandler
         
         var patientEntity = _mapper.Map<PatientEntity>(command.RequestPatientDto);
         patientEntity.Id = command.Id;
+        patientEntity.AddressId = command.AddressId;
 
         _context.PatientEntities.Update(patientEntity);
 

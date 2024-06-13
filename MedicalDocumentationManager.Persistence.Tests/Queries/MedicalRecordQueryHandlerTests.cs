@@ -201,6 +201,8 @@ public class MedicalRecordQueryHandlerTests
         result.Record.Should().Be(_seedDataMedicalRecord.Record);
         result.DoctorId.Should().Be(_seedDataMedicalRecord.DoctorEntity.Id);
         result.PatientId.Should().Be(_seedDataMedicalRecord.PatientEntity.Id);
+        result.CreatedAt.Should().Be(new DateTime(1999, 12, 12));
+        result.UpdatedAt.Should().Be(new DateTime(2000, 05, 25));
     }
 
     [Test]

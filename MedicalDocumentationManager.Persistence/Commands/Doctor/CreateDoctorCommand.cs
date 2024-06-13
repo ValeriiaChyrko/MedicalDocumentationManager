@@ -2,4 +2,4 @@
 
 namespace MedicalDocumentationManager.Persistence.Commands.Doctor;
 
-public sealed record CreateDoctorCommand(RequestDoctorDto RequestDoctorDto);
+public sealed record CreateDoctorCommand(RequestDoctorDto RequestDoctorDto, long AddressId);

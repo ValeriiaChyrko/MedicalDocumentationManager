@@ -38,7 +38,9 @@ public class MedicalRecordCommandHandlerTests
             Email = "test@example.com",
             InsurancePolicyNumber = "222785605",
             InsuranceProvider = "Health Net"
-        }
+        },
+        CreatedAt = new DateTime(1999, 10, 1),
+        UpdatedAt =  new DateTime(2005, 10, 1),
     };
 
     [SetUp]
@@ -68,7 +70,9 @@ public class MedicalRecordCommandHandlerTests
         {
             Record = _seedDataMedicalRecord.Record,
             DoctorId = _seedDataMedicalRecord.DoctorEntity.Id,
-            PatientId = _seedDataMedicalRecord.PatientEntity.Id
+            PatientId = _seedDataMedicalRecord.PatientEntity.Id,
+            CreatedAt = _seedDataMedicalRecord.CreatedAt,
+            UpdatedAt =  _seedDataMedicalRecord.UpdatedAt
         });
 
         // Act

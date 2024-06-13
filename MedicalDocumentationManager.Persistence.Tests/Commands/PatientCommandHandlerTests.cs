@@ -45,13 +45,16 @@ public class PatientCommandHandlerTests
             new RequestPatientDto
             {
                 FullName = "Test Patient 1",
-                BirthDate = new DateOnly(1999, 1, 01),
+                BirthDate = new DateOnly(1999,
+                    1,
+                    01),
                 PhoneNumber = "623-456-7890",
                 Email = "test1@example.com",
                 InsurancePolicyNumber = "622785605",
                 InsuranceProvider = "Health Net",
-                AddressId = int.MaxValue
-            }
+                Address = null!
+            },
+            0
         );
 
         // Act
@@ -65,7 +68,6 @@ public class PatientCommandHandlerTests
         result.Email.Should().Be(command.RequestPatientDto.Email);
         result.InsuranceProvider.Should().Be(command.RequestPatientDto.InsuranceProvider);
         result.InsurancePolicyNumber.Should().Be(command.RequestPatientDto.InsurancePolicyNumber);
-        result.AddressId.Should().Be(int.MaxValue);
     }
 
     [Test]
@@ -86,7 +88,7 @@ public class PatientCommandHandlerTests
     {
         // Arrange
         var handler = new CreatePatientCommandHandler(_context, _mapper);
-        var command = new CreatePatientCommand(null!);
+        var command = new CreatePatientCommand(null!, 0);
 
         // Act
         Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
@@ -145,15 +147,19 @@ public class PatientCommandHandlerTests
         var handler = new CreatePatientCommandHandler(_context, _mapper);
         var createCommand = new CreatePatientCommand
         (
-            new RequestPatientDto
+            RequestPatientDto: new RequestPatientDto
             {
                 FullName = "Test Patient 1",
-                BirthDate = new DateOnly(1999, 1, 01),
+                BirthDate = new DateOnly(1999,
+                    1,
+                    01),
                 PhoneNumber = "623-456-7890",
                 Email = "test1@example.com",
                 InsurancePolicyNumber = "622785605",
-                InsuranceProvider = "Health Net"
-            }
+                InsuranceProvider = "Health Net",
+                Address = null!
+            },
+            0
         );
 
         var createdPatient = await handler.Handle(createCommand, CancellationToken.None);
@@ -165,16 +171,20 @@ public class PatientCommandHandlerTests
             new RequestPatientDto
             {
                 FullName = "Updated Test Patient 1",
-                BirthDate = new DateOnly(1999, 1, 01),
+                BirthDate = new DateOnly(1999,
+                    1,
+                    01),
                 PhoneNumber = "623-456-7891",
                 Email = "updatedtest1@example.com",
                 InsurancePolicyNumber = "622785606",
-                InsuranceProvider = "Updated Health Net"
-            }
+                InsuranceProvider = "Updated Health Net",
+                Address = null!
+            },
+            0
         );
 
         // Act
-        var result = await updateHandler.Handle(updateCommand, CancellationToken.None);
+        var result = await updateHandler.Handle(updateCommand);
 
         // Assert
         result.Should().NotBeNull();
@@ -193,7 +203,7 @@ public class PatientCommandHandlerTests
         var handler = new UpdatePatientCommandHandler(_context, _mapper);
 
         // Act
-        Func<Task<RespondPatientDto>> act = async () => await handler.Handle(null!, CancellationToken.None);
+        Func<Task<RespondPatientDto>> act = async () => await handler.Handle(null!);
 
         // Assert
         act.Should().ThrowAsync<ArgumentNullException>();
@@ -204,10 +214,10 @@ public class PatientCommandHandlerTests
     {
         // Arrange
         var handler = new UpdatePatientCommandHandler(_context, _mapper);
-        var command = new UpdatePatientCommand(Guid.NewGuid(), null!);
+        var command = new UpdatePatientCommand(Guid.NewGuid(), null!, 0);
 
         // Act
-        Func<Task<RespondPatientDto>> act = async () => await handler.Handle(command, CancellationToken.None);
+        Func<Task<RespondPatientDto>> act = async () => await handler.Handle(command);
 
         // Assert
         act.Should().ThrowAsync<ArgumentNullException>();

@@ -2,7 +2,7 @@
 using MedicalDocumentationManager.Database.Contexts.Implementations;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.Profiles;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Subscription;
 
 namespace MedicalDocumentationManager.Persistence.Tests.Queries;
@@ -94,7 +94,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
         respondSubscriptionDtos.Should().Contain(dto => dto.Id == SeedDataSubscription1.Id && dto.SubscriptionType == "Notifier");
@@ -112,7 +112,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().BeEmpty();
     }
@@ -129,7 +129,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
         respondSubscriptionDtos.Should().Contain(dto => dto.MedicalRecordId == SeedDataSubscription1.MedicalRecordEntity.Id && dto.SubscriptionType == "Notifier");
@@ -148,7 +148,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().BeEmpty();
     }
@@ -165,7 +165,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
         respondSubscriptionDtos.Should().Contain(dto => dto.PatientId == SeedDataSubscription1.PatientEntity.Id && dto.SubscriptionType == "Notifier");
@@ -184,7 +184,7 @@ public class SubscriptionQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
+        var respondSubscriptionDtos = result as SubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().BeEmpty();
     }

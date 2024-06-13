@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
-using MedicalDocumentationManager.DTOs.RespondDTOs;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Address;
 
@@ -16,18 +16,18 @@ public sealed class UpdateAddressCommandHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public Task<RespondAddressDto> Handle(UpdateAddressCommand command)
+    public Task<AddressDto> Handle(UpdateAddressCommand command)
     {
         if (command is null)
         {
             throw new ArgumentNullException(nameof(command));
         }
         
-        var addressEntity = _mapper.Map<AddressEntity>(command.RequestAddressDto);
+        var addressEntity = _mapper.Map<AddressEntity>(command.AddressDto);
         addressEntity.Id = command.Id;
         
         _context.AddressEntities.Update(addressEntity);
 
-        return Task.FromResult(_mapper.Map<RespondAddressDto>(addressEntity));
+        return Task.FromResult(_mapper.Map<AddressDto>(addressEntity));
     }
 }

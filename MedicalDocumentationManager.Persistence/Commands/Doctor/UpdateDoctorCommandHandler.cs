@@ -25,6 +25,7 @@ public sealed class UpdateDoctorCommandHandler
         
         var doctorEntity = _mapper.Map<DoctorEntity>(command.RequestDoctorDto);
         doctorEntity.Id = command.Id;
+        doctorEntity.AddressId = command.AddressId;
 
         _context.DoctorEntities.Update(doctorEntity);
 
