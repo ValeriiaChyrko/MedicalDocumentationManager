@@ -46,4 +46,9 @@ public class MedicalDocumentationManagerDbContext : DbContext, IMedicalDocumenta
     {
         return await base.SaveChangesAsync(cancellationToken);
     }
+
+    public void DetachEntity(object entity)
+    {
+        Entry(entity).State = EntityState.Detached;
+    }
 }

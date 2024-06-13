@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MedicalDocumentationManager.Database.Contexts;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
@@ -19,8 +18,14 @@ public sealed class CreatePatientCommandHandler
 
     public async Task<RespondPatientDto> Handle(CreatePatientCommand command, CancellationToken cancellationToken)
     {
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
+        
         var patientEntity = _mapper.Map<PatientEntity>(command.RequestPatientDto);
         var addedEntity = await _context.PatientEntities.AddAsync(patientEntity, cancellationToken);
+        _context.DetachEntity(patientEntity);
 
         return _mapper.Map<RespondPatientDto>(addedEntity.Entity);
     }

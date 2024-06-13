@@ -1,6 +1,4 @@
-﻿using MedicalDocumentationManager.Database.Contexts;
-using MedicalDocumentationManager.Database.Contexts.Abstractions;
-using Microsoft.EntityFrameworkCore;
+﻿using MedicalDocumentationManager.Database.Contexts.Abstractions;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Subscription;
 
@@ -15,9 +13,15 @@ public sealed class DeleteSubscriptionCommandHandler
 
     public async Task Handle(DeleteSubscriptionCommand command, CancellationToken cancellationToken)
     {
-        await _context
-            .SubscriptionEntities
-            .Where(t => t.Id == command.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
+        
+        var subscriptionEntity = await _context.SubscriptionEntities.FindAsync(command.Id, cancellationToken);
+        if (subscriptionEntity!= null)
+        {
+            _context.SubscriptionEntities.Remove(subscriptionEntity);
+        }
     }
 }

@@ -5,7 +5,7 @@ using MedicalDocumentationManager.DTOs.Profiles;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Doctor;
 
-namespace MedicalDocumentationManager.Persistence.Tests;
+namespace MedicalDocumentationManager.Persistence.Tests.Queries;
 
 [TestFixture]
 public class DoctorQueryHandlerTests
@@ -13,9 +13,30 @@ public class DoctorQueryHandlerTests
     private IMedicalDocumentationManagerDbContextFactory _factory = null!;
     private MedicalDocumentationManagerDbContext _context = null!;
     private IMapper _mapper = null!;
-    
-    private readonly Guid _doctorId = Guid.NewGuid();
-    private readonly Guid _doctorId2 = Guid.NewGuid();
+
+    private readonly DoctorEntity _seedDataDoctor1 = new DoctorEntity
+    {
+        Id = Guid.NewGuid(),
+        FullName = "Test Doctor 1",
+        PhoneNumber = "123-456-7890",
+        Email = "test1@example.com",
+        Specialization = "Test Specialization",
+        ExperienceInYears = 5,
+        Education = "Test Education",
+        RoomNumber = "101"
+    };
+
+    private readonly DoctorEntity _seedDataDoctor2 = new DoctorEntity
+    {
+        Id = Guid.NewGuid(),
+        FullName = "Test Doctor 2",
+        PhoneNumber = "123-456-7891",
+        Email = "test2@example.com",
+        Specialization = "Test Specialization",
+        ExperienceInYears = 15,
+        Education = "Test Education",
+        RoomNumber = "102"
+    };
 
     [SetUp]
     public void SetUp()
@@ -33,32 +54,8 @@ public class DoctorQueryHandlerTests
 
     private void SeedData()
     {
-        _context.DoctorEntities.Add(
-            new DoctorEntity
-            {
-                Id = _doctorId,
-                FullName = "Test Doctor 1",
-                PhoneNumber = "123-456-7890",
-                Email = "test1@example.com",
-                Specialization = "Test Specialization",
-                ExperienceInYears = 5,
-                Education = "Test Education",
-                RoomNumber = "101"
-            });
-        
-        _context.DoctorEntities.Add(
-            new DoctorEntity
-            {
-                Id = _doctorId2,
-                FullName = "Test Doctor 2",
-                PhoneNumber = "123-456-7891",
-                Email = "test2@example.com",
-                Specialization = "Test Specialization",
-                ExperienceInYears = 15,
-                Education = "Test Education",
-                RoomNumber = "102"
-            });
-    
+        _context.DoctorEntities.Add(_seedDataDoctor1);
+        _context.DoctorEntities.Add(_seedDataDoctor2);
         _context.SaveChanges();
     }
 
@@ -96,30 +93,29 @@ public class DoctorQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        // Assert
         var respondDoctorDtos = result as RespondDoctorDto[] ?? result.ToArray();
         respondDoctorDtos.Should().NotBeNull();
         respondDoctorDtos.Should().HaveCount(2);
 
-        var doctor1 = respondDoctorDtos.FirstOrDefault(d => d.Id == _doctorId);
+        var doctor1 = respondDoctorDtos.FirstOrDefault(d => d.Id == _seedDataDoctor1.Id);
         doctor1.Should().NotBeNull();
-        doctor1.FullName.Should().Be("Test Doctor 1");
-        doctor1.PhoneNumber.Should().Be("123-456-7890");
-        doctor1.Email.Should().Be("test1@example.com");
-        doctor1.Specialization.Should().Be("Test Specialization");
-        doctor1.ExperienceInYears.Should().Be(5);
-        doctor1.Education.Should().Be("Test Education");
-        doctor1.RoomNumber.Should().Be("101");
+        doctor1.FullName.Should().Be(_seedDataDoctor1.FullName);
+        doctor1.PhoneNumber.Should().Be(_seedDataDoctor1.PhoneNumber);
+        doctor1.Email.Should().Be(_seedDataDoctor1.Email);
+        doctor1.Specialization.Should().Be(_seedDataDoctor1.Specialization);
+        doctor1.ExperienceInYears.Should().Be(_seedDataDoctor1.ExperienceInYears);
+        doctor1.Education.Should().Be(_seedDataDoctor1.Education);
+        doctor1.RoomNumber.Should().Be(_seedDataDoctor1.RoomNumber);
 
-        var doctor2 = respondDoctorDtos.FirstOrDefault(d => d.Id == _doctorId2);
+        var doctor2 = respondDoctorDtos.FirstOrDefault(d => d.Id == _seedDataDoctor2.Id);
         doctor2.Should().NotBeNull();
-        doctor2.FullName.Should().Be("Test Doctor 2");
-        doctor2.PhoneNumber.Should().Be("123-456-7891");
-        doctor2.Email.Should().Be("test2@example.com");
-        doctor2.Specialization.Should().Be("Test Specialization");
-        doctor2.ExperienceInYears.Should().Be(15);
-        doctor2.Education.Should().Be("Test Education");
-        doctor2.RoomNumber.Should().Be("102");
+        doctor2.FullName.Should().Be(_seedDataDoctor2.FullName);
+        doctor2.PhoneNumber.Should().Be(_seedDataDoctor2.PhoneNumber);
+        doctor2.Email.Should().Be(_seedDataDoctor2.Email);
+        doctor2.Specialization.Should().Be(_seedDataDoctor2.Specialization);
+        doctor2.ExperienceInYears.Should().Be(_seedDataDoctor2.ExperienceInYears);
+        doctor2.Education.Should().Be(_seedDataDoctor2.Education);
+        doctor2.RoomNumber.Should().Be(_seedDataDoctor2.RoomNumber);
     }
     
     [Test]
@@ -127,7 +123,7 @@ public class DoctorQueryHandlerTests
     {
         // Arrange
         var handler = new GetDoctorByIdQueryHandler(_context, _mapper);
-        var query = new GetDoctorByIdQuery(_doctorId);
+        var query = new GetDoctorByIdQuery(_seedDataDoctor1.Id);
 
         // Act
         SeedData();
@@ -135,14 +131,14 @@ public class DoctorQueryHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_doctorId);
-        result.FullName.Should().Be("Test Doctor 1");
-        result.PhoneNumber.Should().Be("123-456-7890");
-        result.Email.Should().Be("test1@example.com");
-        result.Specialization.Should().Be("Test Specialization");
-        result.ExperienceInYears.Should().Be(5);
-        result.Education.Should().Be("Test Education");
-        result.RoomNumber.Should().Be("101");
+result.Id.Should().Be(_seedDataDoctor1.Id);
+        result.FullName.Should().Be(_seedDataDoctor1.FullName);
+        result.PhoneNumber.Should().Be(_seedDataDoctor1.PhoneNumber);
+        result.Email.Should().Be(_seedDataDoctor1.Email);
+        result.Specialization.Should().Be(_seedDataDoctor1.Specialization);
+        result.ExperienceInYears.Should().Be(_seedDataDoctor1.ExperienceInYears);
+        result.Education.Should().Be(_seedDataDoctor1.Education);
+        result.RoomNumber.Should().Be(_seedDataDoctor1.RoomNumber);
     }
 
     [Test]

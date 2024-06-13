@@ -5,7 +5,7 @@ using MedicalDocumentationManager.DTOs.Profiles;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using MedicalDocumentationManager.Persistence.Queries.MedicalRecord;
 
-namespace MedicalDocumentationManager.Persistence.Tests;
+namespace MedicalDocumentationManager.Persistence.Tests.Queries;
 
 [TestFixture]
 public class MedicalRecordQueryHandlerTests
@@ -13,10 +13,34 @@ public class MedicalRecordQueryHandlerTests
     private IMedicalDocumentationManagerDbContextFactory _factory = null!;
     private MedicalDocumentationManagerDbContext _context = null!;
     private IMapper _mapper = null!;
-    
-    private readonly Guid _medicalRecordId = Guid.NewGuid();
-    private readonly Guid _doctorId = Guid.NewGuid();
-    private readonly Guid _patientId = Guid.NewGuid();
+
+    private readonly MedicalRecordEntity _seedDataMedicalRecord = new MedicalRecordEntity
+    {
+        Id = Guid.NewGuid(),
+        Record = "Test Record",
+        DoctorEntity = new DoctorEntity
+        {
+            Id = Guid.NewGuid(),
+            FullName = "Test Doctor",
+            PhoneNumber = "123-456-7890",
+            Email = "test@example.com",
+            Specialization = "Test Specialization",
+            ExperienceInYears = 5,
+            Education = "Test Education",
+            RoomNumber = "101"
+        },
+        PatientEntity = new PatientEntity
+        {
+            Id = Guid.NewGuid(),
+            FullName = "Test Patient",
+            PhoneNumber = "123-456-7890",
+            Email = "test@example.com",
+            InsurancePolicyNumber = "222785605",
+            InsuranceProvider = "Health Net"
+        },
+        CreatedAt = new DateTime(1999, 12, 12),
+        UpdatedAt = new DateTime(2000, 05, 25)
+    };
 
     [SetUp]
     public void SetUp()
@@ -34,32 +58,7 @@ public class MedicalRecordQueryHandlerTests
 
     private void SeedData()
     {
-        _context.MedicalRecordEntities.Add(new MedicalRecordEntity
-        {
-            Id = _medicalRecordId,
-            Record = "Test Record",
-            DoctorEntity = new DoctorEntity
-            {
-                Id = _doctorId,
-                FullName = "Test Doctor",
-                PhoneNumber = "123-456-7890",
-                Email = "test@example.com",
-                Specialization = "Test Specialization",
-                ExperienceInYears = 5,
-                Education = "Test Education",
-                RoomNumber = "101"
-            },
-            PatientEntity = new PatientEntity
-            {
-                Id = _patientId,
-                FullName = "Test Patient",
-                PhoneNumber = "123-456-7890",
-                Email = "test@example.com",
-                InsurancePolicyNumber = "222785605",
-                InsuranceProvider = "Health Net"
-            }
-        });
-        
+        _context.MedicalRecordEntities.Add(_seedDataMedicalRecord);
         _context.SaveChanges();
     }
     
@@ -75,7 +74,7 @@ public class MedicalRecordQueryHandlerTests
         // Arrange
         SeedData();
         var handler = new GetAllMedicalRecordsByDoctorIdQueryHandler(_context, _mapper);
-        var query = new GetAllMedicalRecordsByDoctorIdQuery(_doctorId );
+        var query = new GetAllMedicalRecordsByDoctorIdQuery(_seedDataMedicalRecord.DoctorEntity.Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -84,13 +83,15 @@ public class MedicalRecordQueryHandlerTests
         var respondMedicalRecordDtos = result as RespondMedicalRecordDto[] ?? result.ToArray();
         respondMedicalRecordDtos.Should().NotBeNull();
         respondMedicalRecordDtos.Should().HaveCount(1);
-        respondMedicalRecordDtos.Should().Contain(dto => dto.DoctorId == _doctorId);
+        respondMedicalRecordDtos.Should().Contain(dto => dto.DoctorId == _seedDataMedicalRecord.DoctorEntity.Id);
         
-        var medicalRecord = respondMedicalRecordDtos.FirstOrDefault(d => d.DoctorId == _doctorId);
+        var medicalRecord = respondMedicalRecordDtos.FirstOrDefault(d => d.DoctorId == _seedDataMedicalRecord.DoctorEntity.Id);
         medicalRecord.Should().NotBeNull();
-        medicalRecord.Record.Should().Be("Test Record");
-        medicalRecord.DoctorId.Should().Be(_doctorId);
-        medicalRecord.PatientId.Should().Be(_patientId);
+        medicalRecord.Record.Should().Be(_seedDataMedicalRecord.Record);
+        medicalRecord.DoctorId.Should().Be(_seedDataMedicalRecord.DoctorEntity.Id);
+        medicalRecord.PatientId.Should().Be(_seedDataMedicalRecord.PatientEntity.Id);
+        medicalRecord.CreatedAt.Should().Be(new DateTime(1999, 12, 12));
+        medicalRecord.UpdatedAt.Should().Be(new DateTime(2000, 05, 25));
     }
 
     [Test]
@@ -98,7 +99,7 @@ public class MedicalRecordQueryHandlerTests
     {
         // Arrange
         var handler = new GetAllMedicalRecordsByDoctorIdQueryHandler(_context, _mapper);
-        var query = new GetAllMedicalRecordsByDoctorIdQuery(_doctorId);
+        var query = new GetAllMedicalRecordsByDoctorIdQuery(Guid.NewGuid());
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -115,7 +116,7 @@ public class MedicalRecordQueryHandlerTests
         // Arrange
         SeedData();
         var handler = new GetAllMedicalRecordsByPatientIdQueryHandler(_context, _mapper);
-        var query = new GetAllMedicalRecordsByPatientIdQuery(_patientId);
+        var query = new GetAllMedicalRecordsByPatientIdQuery(_seedDataMedicalRecord.PatientEntity.Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -124,13 +125,13 @@ public class MedicalRecordQueryHandlerTests
         var respondMedicalRecordDtos = result as RespondMedicalRecordDto[] ?? result.ToArray();
         respondMedicalRecordDtos.Should().NotBeNull();
         respondMedicalRecordDtos.Should().HaveCount(1);
-        respondMedicalRecordDtos.Should().Contain(dto => dto.PatientId == _patientId);
+        respondMedicalRecordDtos.Should().Contain(dto => dto.PatientId == _seedDataMedicalRecord.PatientEntity.Id);
         
-        var medicalRecord = respondMedicalRecordDtos.FirstOrDefault(d => d.PatientId == _patientId);
+        var medicalRecord = respondMedicalRecordDtos.FirstOrDefault(d => d.PatientId == _seedDataMedicalRecord.PatientEntity.Id);
         medicalRecord.Should().NotBeNull();
-        medicalRecord.Record.Should().Be("Test Record");
-        medicalRecord.DoctorId.Should().Be(_doctorId);
-        medicalRecord.PatientId.Should().Be(_patientId);
+        medicalRecord.Record.Should().Be(_seedDataMedicalRecord.Record);
+        medicalRecord.DoctorId.Should().Be(_seedDataMedicalRecord.DoctorEntity.Id);
+        medicalRecord.PatientId.Should().Be(_seedDataMedicalRecord.PatientEntity.Id);
     }
 
     [Test]
@@ -165,7 +166,7 @@ public class MedicalRecordQueryHandlerTests
         var respondMedicalRecordDtos = result as RespondMedicalRecordDto[] ?? result.ToArray();
         respondMedicalRecordDtos.Should().NotBeNull();
         respondMedicalRecordDtos.Should().HaveCount(1);
-        respondMedicalRecordDtos.Should().Contain(dto => dto.Id == _medicalRecordId);
+        respondMedicalRecordDtos.Should().Contain(dto => dto.Id == _seedDataMedicalRecord.Id);
     }
 
     [Test]
@@ -190,16 +191,16 @@ public class MedicalRecordQueryHandlerTests
         // Arrange
         SeedData();
         var handler = new GetMedicalRecordByIdQueryHandler(_context, _mapper);
-        var query = new GetMedicalRecordByIdQuery(_medicalRecordId);
+        var query = new GetMedicalRecordByIdQuery(_seedDataMedicalRecord.Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
-        result.Record.Should().Be("Test Record");
-        result.DoctorId.Should().Be(_doctorId);
-        result.PatientId.Should().Be(_patientId);
+        result.Record.Should().Be(_seedDataMedicalRecord.Record);
+        result.DoctorId.Should().Be(_seedDataMedicalRecord.DoctorEntity.Id);
+        result.PatientId.Should().Be(_seedDataMedicalRecord.PatientEntity.Id);
     }
 
     [Test]

@@ -5,7 +5,7 @@ using MedicalDocumentationManager.DTOs.Profiles;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Subscription;
 
-namespace MedicalDocumentationManager.Persistence.Tests;
+namespace MedicalDocumentationManager.Persistence.Tests.Queries;
 
 [TestFixture]
 public class SubscriptionQueryHandlerTests
@@ -13,12 +13,47 @@ public class SubscriptionQueryHandlerTests
     private IMedicalDocumentationManagerDbContextFactory _factory = null!;
     private MedicalDocumentationManagerDbContext _context = null!;
     private IMapper _mapper = null!;
+    private static readonly Guid PatientId = Guid.NewGuid();
 
-    private readonly long _subscriptionId = 112;
-    private readonly long _subscriptionId2 = 123;
-    private readonly Guid _patientId = Guid.NewGuid();
-    private readonly Guid _doctorId = Guid.NewGuid();
-    private readonly Guid _medicalRecordId = Guid.NewGuid();
+    private static readonly SubscriptionEntity SeedDataSubscription1 = new SubscriptionEntity
+    {
+        Id = 112,
+        SubscriptionType = "Notifier",
+        PatientEntity = new PatientEntity
+        {
+            Id = PatientId,
+            FullName = "Test Patient 1",
+            PhoneNumber = "623-456-7890",
+            Email = "test1@example.com",
+            InsurancePolicyNumber = "622785605",
+            InsuranceProvider = "Health Net"
+        },
+        MedicalRecordEntity = new MedicalRecordEntity
+        {
+            Id = Guid.NewGuid(),
+            Record = "Test Record",
+            DoctorEntity = new DoctorEntity
+            {
+                Id = Guid.NewGuid(),
+                FullName = "Test Doctor",
+                PhoneNumber = "123-456-7890",
+                Email = "test@example.com",
+                Specialization = "Test Specialization",
+                ExperienceInYears = 5,
+                Education = "Test Education",
+                RoomNumber = "101"
+            },
+            PatientId = PatientId
+        }
+    };
+
+    private readonly SubscriptionEntity _seedDataSubscription2 = new SubscriptionEntity
+    {
+        Id = 123,
+        SubscriptionType = "Observer",
+        PatientId = SeedDataSubscription1.PatientEntity.Id,
+        MedicalRecordId = SeedDataSubscription1.MedicalRecordEntity.Id
+    };
 
     [SetUp]
     public void SetUp()
@@ -36,48 +71,8 @@ public class SubscriptionQueryHandlerTests
 
     private void SeedData()
     {
-        _context.SubscriptionEntities.Add(
-            new SubscriptionEntity
-            {
-                Id = _subscriptionId,
-                SubscriptionType = "Notifier",
-                PatientEntity =  new PatientEntity
-                {
-                    Id = _patientId,
-                    FullName = "Test Patient 1",
-                    PhoneNumber = "623-456-7890",
-                    Email = "test1@example.com",
-                    InsurancePolicyNumber = "622785605",
-                    InsuranceProvider = "Health Net"
-                },
-                MedicalRecordEntity = new MedicalRecordEntity
-                {
-                    Id = _medicalRecordId,
-                    Record = "Test Record",
-                    DoctorEntity = new DoctorEntity
-                    {
-                        Id = _doctorId,
-                        FullName = "Test Doctor",
-                        PhoneNumber = "123-456-7890",
-                        Email = "test@example.com",
-                        Specialization = "Test Specialization",
-                        ExperienceInYears = 5,
-                        Education = "Test Education",
-                        RoomNumber = "101"
-                    },
-                    PatientId = _patientId
-                }
-            });
-        
-        _context.SubscriptionEntities.Add(
-            new SubscriptionEntity
-            {
-                Id = _subscriptionId2,
-                SubscriptionType = "Observer",
-                PatientId = _patientId,
-                MedicalRecordId = _medicalRecordId
-            });
-
+        _context.SubscriptionEntities.Add(SeedDataSubscription1);
+        _context.SubscriptionEntities.Add(_seedDataSubscription2);
         _context.SaveChanges();
     }
 
@@ -102,8 +97,8 @@ public class SubscriptionQueryHandlerTests
         var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
-        respondSubscriptionDtos.Should().Contain(dto => dto.Id == _subscriptionId && dto.SubscriptionType == "Notifier");
-        respondSubscriptionDtos.Should().Contain(dto => dto.Id == _subscriptionId2 && dto.SubscriptionType == "Observer");
+        respondSubscriptionDtos.Should().Contain(dto => dto.Id == SeedDataSubscription1.Id && dto.SubscriptionType == "Notifier");
+        respondSubscriptionDtos.Should().Contain(dto => dto.Id == _seedDataSubscription2.Id && dto.SubscriptionType == "Observer");
     }
 
     [Test]
@@ -128,7 +123,7 @@ public class SubscriptionQueryHandlerTests
         // Arrange
         SeedData();
         var handler = new GetAllSubscriptionsByMedicalRecordIdQueryHandler(_context, _mapper);
-        var query = new GetAllSubscriptionsByMedicalRecordIdQuery(_medicalRecordId);
+        var query = new GetAllSubscriptionsByMedicalRecordIdQuery(SeedDataSubscription1.MedicalRecordEntity.Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -137,8 +132,8 @@ public class SubscriptionQueryHandlerTests
         var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
-        respondSubscriptionDtos.Should().Contain(dto => dto.MedicalRecordId == _medicalRecordId && dto.SubscriptionType == "Notifier");
-        respondSubscriptionDtos.Should().Contain(dto => dto.MedicalRecordId == _medicalRecordId && dto.SubscriptionType == "Observer");
+        respondSubscriptionDtos.Should().Contain(dto => dto.MedicalRecordId == SeedDataSubscription1.MedicalRecordEntity.Id && dto.SubscriptionType == "Notifier");
+        respondSubscriptionDtos.Should().Contain(dto => dto.MedicalRecordId == SeedDataSubscription1.MedicalRecordEntity.Id && dto.SubscriptionType == "Observer");
     }
 
     [Test]
@@ -164,7 +159,7 @@ public class SubscriptionQueryHandlerTests
         // Arrange
         SeedData();
         var handler = new GetAllSubscriptionsByPatientIdQueryHandler(_context, _mapper);
-        var query = new GetAllSubscriptionsByPatientIdQuery(_patientId);
+        var query = new GetAllSubscriptionsByPatientIdQuery(SeedDataSubscription1.PatientEntity.Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -173,8 +168,8 @@ public class SubscriptionQueryHandlerTests
         var respondSubscriptionDtos = result as RespondSubscriptionDto[] ?? result.ToArray();
         respondSubscriptionDtos.Should().NotBeNull();
         respondSubscriptionDtos.Should().HaveCount(2);
-        respondSubscriptionDtos.Should().Contain(dto => dto.PatientId == _patientId && dto.SubscriptionType == "Notifier");
-        respondSubscriptionDtos.Should().Contain(dto => dto.PatientId == _patientId && dto.SubscriptionType == "Observer");
+        respondSubscriptionDtos.Should().Contain(dto => dto.PatientId == SeedDataSubscription1.PatientEntity.Id && dto.SubscriptionType == "Notifier");
+        respondSubscriptionDtos.Should().Contain(dto => dto.PatientId == SeedDataSubscription1.PatientEntity.Id && dto.SubscriptionType == "Observer");
     }
 
     [Test]

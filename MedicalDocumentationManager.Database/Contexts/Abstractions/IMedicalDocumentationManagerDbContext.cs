@@ -12,4 +12,5 @@ public interface IMedicalDocumentationManagerDbContext
     DbSet<SubscriptionEntity> SubscriptionEntities { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    void DetachEntity(object entity);
 }

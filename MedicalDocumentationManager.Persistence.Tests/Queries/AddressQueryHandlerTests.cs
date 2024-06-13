@@ -5,7 +5,7 @@ using MedicalDocumentationManager.DTOs.Profiles;
 using MedicalDocumentationManager.DTOs.RequestsDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Address;
 
-namespace MedicalDocumentationManager.Persistence.Tests;
+namespace MedicalDocumentationManager.Persistence.Tests.Queries;
 
 [TestFixture]
 public class AddressQueryHandlerTests
@@ -14,9 +14,40 @@ public class AddressQueryHandlerTests
     private MedicalDocumentationManagerDbContext _context = null!;
     private IMapper _mapper = null!;
 
-    private readonly long _addressId = 1;
-    private readonly Guid _doctorId = Guid.NewGuid();
-    private readonly Guid _patientId = Guid.NewGuid();
+    private readonly AddressEntity _seedDataAddress = new AddressEntity
+    {
+        Id = int.MaxValue,
+        Street = "Test Street",
+        City = "Test City",
+        State = "Test State",
+        Zip = "12345",
+        Doctors = new List<DoctorEntity>
+        {
+            new DoctorEntity
+            {
+                Id = Guid.NewGuid(),
+                FullName = "Test Doctor",
+                PhoneNumber = "123-456-7890",
+                Email = "test@example.com",
+                Specialization = "Test Specialization",
+                ExperienceInYears = 5,
+                Education = "Test Education",
+                RoomNumber = "101"
+            }
+        },
+        Patients = new List<PatientEntity>
+        {
+            new PatientEntity
+            {
+                Id = Guid.NewGuid(),
+                FullName = "Test Patient",
+                PhoneNumber = "123-456-7890",
+                Email = "test@example.com",
+                InsurancePolicyNumber = "222785605",
+                InsuranceProvider = "Health Net"
+            }
+        }
+    };
 
     [SetUp]
     public void SetUp()
@@ -31,41 +62,7 @@ public class AddressQueryHandlerTests
 
         _mapper = mapperConfig.CreateMapper();
 
-        _context.AddressEntities.Add(new AddressEntity
-        {
-            Id = _addressId,
-            Street = "Test Street",
-            City = "Test City",
-            State = "Test State",
-            Zip = "12345",
-            Doctors = new List<DoctorEntity>
-            {
-                new DoctorEntity
-                {
-                    Id = _doctorId,
-                    FullName = "Test Doctor",
-                    PhoneNumber = "123-456-7890",
-                    Email = "test@example.com",
-                    Specialization = "Test Specialization",
-                    ExperienceInYears = 5,
-                    Education = "Test Education",
-                    RoomNumber = "101"
-                }
-            },
-            Patients = new List<PatientEntity>
-            {
-                new PatientEntity
-                {
-                    Id = _patientId,
-                    FullName = "Test Patient",
-                    PhoneNumber = "123-456-7890",
-                    Email = "test@example.com",
-                    InsurancePolicyNumber = "222785605",
-                    InsuranceProvider = "Health Net"
-                }
-            }
-        });
-    
+        _context.AddressEntities.Add(_seedDataAddress);
         _context.SaveChanges();
     }
 
@@ -82,10 +79,10 @@ public class AddressQueryHandlerTests
         var handler = new GetAllAddressesQueryHandler(_context, _mapper);
         var query = new GetAddressIfExistsQuery(new RequestAddressDto
         {
-            Street = "Test Street",
-            City = "Test City",
-            State = "Test State",
-            Zip = "12345"
+            Street = _seedDataAddress.Street,
+            City = _seedDataAddress.City,
+            State = _seedDataAddress.State,
+            Zip = _seedDataAddress.Zip
         });
 
         // Act
@@ -93,11 +90,11 @@ public class AddressQueryHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_addressId);
-        result.Street.Should().Be("Test Street");
-        result.City.Should().Be("Test City");
-        result.State.Should().Be("Test State");
-        result.Zip.Should().Be("12345");
+        result.Id.Should().Be(_seedDataAddress.Id);
+        result.Street.Should().Be(_seedDataAddress.Street);
+        result.City.Should().Be(_seedDataAddress.City);
+        result.State.Should().Be(_seedDataAddress.State);
+        result.Zip.Should().Be(_seedDataAddress.Zip);
     }
 
     [Test]
@@ -124,7 +121,7 @@ public class AddressQueryHandlerTests
     public async Task Handle_GetAddressByIdQuery_ReturnsAddressDto_WhenAddressExists()
     {
         // Arrange
-        var query = new GetAddressByIdQuery(_addressId);
+        var query = new GetAddressByIdQuery(_seedDataAddress.Id);
 
         // Act
         var handler = new GetAddressByIdQueryHandler(_context, _mapper);
@@ -132,11 +129,11 @@ public class AddressQueryHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_addressId);
-        result.Street.Should().Be("Test Street");
-        result.City.Should().Be("Test City");
-        result.State.Should().Be("Test State");
-        result.Zip.Should().Be("12345");
+        result.Id.Should().Be(_seedDataAddress.Id);
+        result.Street.Should().Be(_seedDataAddress.Street);
+        result.City.Should().Be(_seedDataAddress.City);
+        result.State.Should().Be(_seedDataAddress.State);
+        result.Zip.Should().Be(_seedDataAddress.Zip);
     }
 
     [Test]
@@ -158,18 +155,18 @@ public class AddressQueryHandlerTests
     {
         // Arrange
         var handler = new GetAddressByDoctorIdQueryHandler(_context, _mapper);
-        var query = new GetAddressByDoctorIdQuery(_doctorId);
+        var query = new GetAddressByDoctorIdQuery(_seedDataAddress.Doctors!.First().Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_addressId);
-        result.Street.Should().Be("Test Street");
-        result.City.Should().Be("Test City");
-        result.State.Should().Be("Test State");
-        result.Zip.Should().Be("12345");
+        result.Id.Should().Be(_seedDataAddress.Id);
+        result.Street.Should().Be(_seedDataAddress.Street);
+        result.City.Should().Be(_seedDataAddress.City);
+        result.State.Should().Be(_seedDataAddress.State);
+        result.Zip.Should().Be(_seedDataAddress.Zip);
     }
 
     [Test]
@@ -191,18 +188,18 @@ public class AddressQueryHandlerTests
     {
         // Arrange
         var handler = new GetAddressByPatientIdQueryHandler(_context, _mapper);
-        var query = new GetAddressByPatientIdQuery(_patientId);
+        var query = new GetAddressByPatientIdQuery(_seedDataAddress.Patients!.First().Id);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_addressId);
-        result.Street.Should().Be("Test Street");
-        result.City.Should().Be("Test City");
-        result.State.Should().Be("Test State");
-        result.Zip.Should().Be("12345");
+        result.Id.Should().Be(_seedDataAddress.Id);
+        result.Street.Should().Be(_seedDataAddress.Street);
+        result.City.Should().Be(_seedDataAddress.City);
+        result.State.Should().Be(_seedDataAddress.State);
+        result.Zip.Should().Be(_seedDataAddress.Zip);
     }
 
     [Test]

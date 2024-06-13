@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MedicalDocumentationManager.Database.Contexts;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
@@ -19,6 +18,11 @@ public sealed class UpdateMedicalRecordCommandHandler
 
     public Task<RespondMedicalRecordDto> Handle(UpdateMedicalRecordCommand command)
     {
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
+        
         var medicalRecordEntity = _mapper.Map<MedicalRecordEntity>(command.RequestMedicalRecordDto);
         medicalRecordEntity.Id = command.Id;
 

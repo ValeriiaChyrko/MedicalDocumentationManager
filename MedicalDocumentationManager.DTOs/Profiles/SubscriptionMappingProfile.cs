@@ -10,7 +10,7 @@ public class SubscriptionMappingProfile : Profile
     public SubscriptionMappingProfile()
     {
         CreateMap<RequestSubscriptionDto, SubscriptionEntity>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.PatientEntity, opt => opt.Ignore())
             .ForMember(dest => dest.MedicalRecordEntity, opt => opt.Ignore());
 

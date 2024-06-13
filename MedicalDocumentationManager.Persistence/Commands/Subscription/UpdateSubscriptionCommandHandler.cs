@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MedicalDocumentationManager.Database.Contexts;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
@@ -19,6 +18,11 @@ public sealed class UpdateSubscriptionCommandHandler
 
     public Task<RespondSubscriptionDto> Handle(UpdateSubscriptionCommand command)
     {
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
+        
         var subscriptionEntity = _mapper.Map<SubscriptionEntity>(command.RequestSubscriptionDto);
         subscriptionEntity.Id = command.Id;
 

@@ -5,7 +5,7 @@ using MedicalDocumentationManager.DTOs.Profiles;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using MedicalDocumentationManager.Persistence.Queries.Patient;
 
-namespace MedicalDocumentationManager.Persistence.Tests;
+namespace MedicalDocumentationManager.Persistence.Tests.Queries;
 
 [TestFixture]
 public class PatientQueryHandlerTests
@@ -13,48 +13,43 @@ public class PatientQueryHandlerTests
     private IMedicalDocumentationManagerDbContextFactory _factory = null!;
     private MedicalDocumentationManagerDbContext _context = null!;
     private IMapper _mapper = null!;
-    
-    private readonly Guid _patientId = Guid.NewGuid();
-    private readonly Guid _patientId2 = Guid.NewGuid();
 
+    private readonly PatientEntity _seedDataPatient1 = new()
+    {
+        Id = Guid.NewGuid(),
+        FullName = "Test Patient 1",
+        PhoneNumber = "623-456-7890",
+        Email = "test1@example.com",
+        InsurancePolicyNumber = "622785605",
+        InsuranceProvider = "Health Net"
+    };
+
+    private readonly PatientEntity _seedDataPatient2 = new()
+    {
+        Id = Guid.NewGuid(),
+        FullName = "Test Patient 2",
+        PhoneNumber = "723-456-7890",
+        Email = "test2@example.com",
+        InsurancePolicyNumber = "252785605",
+        InsuranceProvider = "Health Net",
+        AddressId = int.MaxValue
+    };
+    
     [SetUp]
     public void SetUp()
     {
         _factory = new MedicalDocumentationManagerInMemoryDbContextFactory();
         _context = _factory.CreateDbContext(Array.Empty<string>());
-        
-        var mapperConfig = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new PatientMappingProfile());
-        });
+
+        var mapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile(new PatientMappingProfile()); });
 
         _mapper = mapperConfig.CreateMapper();
     }
 
     private void SeedData()
     {
-        _context.PatientEntities.Add(
-            new PatientEntity
-            {
-                Id = _patientId,
-                FullName = "Test Patient 1",
-                PhoneNumber = "623-456-7890",
-                Email = "test1@example.com",
-                InsurancePolicyNumber = "622785605",
-                InsuranceProvider = "Health Net"
-            });
-        
-        _context.PatientEntities.Add(
-            new PatientEntity
-            {
-                Id = _patientId2,
-                FullName = "Test Patient 2",
-                PhoneNumber = "723-456-7890",
-                Email = "test2@example.com",
-                InsurancePolicyNumber = "252785605",
-                InsuranceProvider = "Health Net"
-            });
-    
+        _context.PatientEntities.Add(_seedDataPatient1);
+        _context.PatientEntities.Add(_seedDataPatient2);
         _context.SaveChanges();
     }
 
@@ -63,7 +58,7 @@ public class PatientQueryHandlerTests
     {
         _context.Database.EnsureDeleted();
     }
-    
+
     [Test]
     public async Task Handle_GetAllPatientsQuery_ReturnsEmptyList_WhenNoRecordsExist()
     {
@@ -79,7 +74,7 @@ public class PatientQueryHandlerTests
         respondPatientDtos.Should().NotBeNull();
         respondPatientDtos.Should().BeEmpty();
     }
-    
+
     [Test]
     public async Task Handle_GetAllPatientsQuery_ReturnsListOfRespondDoctorDtos()
     {
@@ -92,34 +87,34 @@ public class PatientQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        // Assert
         var respondPatientDtos = result as RespondPatientDto[] ?? result.ToArray();
         respondPatientDtos.Should().NotBeNull();
         respondPatientDtos.Should().HaveCount(2);
 
-        var patient1 = respondPatientDtos.FirstOrDefault(d => d.Id == _patientId);
+        var patient1 = respondPatientDtos.FirstOrDefault(d => d.Id == _seedDataPatient1.Id);
         patient1.Should().NotBeNull();
-        patient1.FullName.Should().Be("Test Patient 1");
-        patient1.PhoneNumber.Should().Be("623-456-7890");
-        patient1.Email.Should().Be("test1@example.com");
-        patient1.InsurancePolicyNumber.Should().Be("622785605");
-        patient1.InsuranceProvider.Should().Be("Health Net");
+        patient1.FullName.Should().Be(_seedDataPatient1.FullName);
+        patient1.PhoneNumber.Should().Be(_seedDataPatient1.PhoneNumber);
+        patient1.Email.Should().Be(_seedDataPatient1.Email);
+        patient1.InsurancePolicyNumber.Should().Be(_seedDataPatient1.InsurancePolicyNumber);
+        patient1.InsuranceProvider.Should().Be(_seedDataPatient1.InsuranceProvider);
 
-        var patient2 = respondPatientDtos.FirstOrDefault(d => d.Id == _patientId2);
+        var patient2 = respondPatientDtos.FirstOrDefault(d => d.Id == _seedDataPatient2.Id);
         patient2.Should().NotBeNull();
-        patient2.FullName.Should().Be("Test Patient 2");
-        patient2.PhoneNumber.Should().Be("723-456-7890");
-        patient2.Email.Should().Be("test2@example.com");
-        patient2.InsurancePolicyNumber.Should().Be("252785605");
-        patient2.InsuranceProvider.Should().Be("Health Net");
+        patient2.FullName.Should().Be(_seedDataPatient2.FullName);
+        patient2.PhoneNumber.Should().Be(_seedDataPatient2.PhoneNumber);
+        patient2.Email.Should().Be(_seedDataPatient2.Email);
+        patient2.InsurancePolicyNumber.Should().Be(_seedDataPatient2.InsurancePolicyNumber);
+        patient2.InsuranceProvider.Should().Be(_seedDataPatient2.InsuranceProvider);
+        patient2.AddressId.Should().Be(int.MaxValue);
     }
-    
+
     [Test]
     public async Task Handle_GetPatientByIdQuery_ReturnsRespondDoctorDto_WhenDoctorExists()
     {
         // Arrange
         var handler = new GetPatientByIdQueryHandler(_context, _mapper);
-        var query = new GetPatientByIdQuery(_patientId);
+        var query = new GetPatientByIdQuery(_seedDataPatient1.Id);
 
         // Act
         SeedData();
@@ -127,12 +122,12 @@ public class PatientQueryHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(_patientId);
-        result.FullName.Should().Be("Test Patient 1");
-        result.PhoneNumber.Should().Be("623-456-7890");
-        result.Email.Should().Be("test1@example.com");
-        result.InsurancePolicyNumber.Should().Be("622785605");
-        result.InsuranceProvider.Should().Be("Health Net");
+        result.Id.Should().Be(_seedDataPatient1.Id);
+        result.FullName.Should().Be(_seedDataPatient1.FullName);
+        result.PhoneNumber.Should().Be(_seedDataPatient1.PhoneNumber);
+        result.Email.Should().Be(_seedDataPatient1.Email);
+        result.InsurancePolicyNumber.Should().Be(_seedDataPatient1.InsurancePolicyNumber);
+        result.InsuranceProvider.Should().Be(_seedDataPatient1.InsuranceProvider);
     }
 
     [Test]
