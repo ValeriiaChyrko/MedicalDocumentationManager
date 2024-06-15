@@ -1,8 +1,9 @@
-﻿using MedicalDocumentationManager.Database.Contexts.Abstractions;
+﻿using MediatR;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 
 namespace MedicalDocumentationManager.Persistence.Commands.MedicalRecord;
 
-public sealed class DeleteMedicalRecordCommandHandler
+public sealed class DeleteMedicalRecordCommandHandler : IRequestHandler<DeleteMedicalRecordCommand>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
 
@@ -13,15 +14,9 @@ public sealed class DeleteMedicalRecordCommandHandler
 
     public async Task Handle(DeleteMedicalRecordCommand command, CancellationToken cancellationToken)
     {
-        if (command is null)
-        {
-            throw new ArgumentNullException(nameof(command));
-        }
-        
+        if (command is null) throw new ArgumentNullException(nameof(command));
+
         var medicalRecordEntity = await _context.MedicalRecordEntities.FindAsync(command.Id, cancellationToken);
-        if (medicalRecordEntity!= null)
-        {
-            _context.MedicalRecordEntities.Remove(medicalRecordEntity);
-        }
+        if (medicalRecordEntity != null) _context.MedicalRecordEntities.Remove(medicalRecordEntity);
     }
 }

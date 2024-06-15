@@ -17,7 +17,7 @@ public class RequestDoctorDtoValidator : AbstractValidator<RequestDoctorDto>
         RuleFor(dto => dto.BirthDate)
             .NotEmpty().WithMessage("Birth date cannot be empty.")
             .Must(BeValidBirthDate).WithMessage("Birth date must be before the current date.");
-        
+
         RuleFor(p => p.Address)
             .NotNull().WithMessage("Address cannot be null.")
             .SetValidator(new RequestAddressDtoValidator());

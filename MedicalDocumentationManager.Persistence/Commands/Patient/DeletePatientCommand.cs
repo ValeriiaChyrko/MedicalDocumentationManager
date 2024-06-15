@@ -1,3 +1,5 @@
-﻿namespace MedicalDocumentationManager.Persistence.Commands.Patient;
+﻿using MediatR;
 
-public sealed record DeletePatientCommand(Guid Id);
+namespace MedicalDocumentationManager.Persistence.Commands.Patient;
+
+public sealed record DeletePatientCommand(Guid Id) : IRequest;

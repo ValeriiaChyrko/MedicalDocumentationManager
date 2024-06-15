@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Patient;
 
-public sealed class UpdatePatientCommandHandler
+public sealed class UpdatePatientCommandHandler : IRequestHandler<UpdatePatientCommand, RespondPatientDto>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;
@@ -16,13 +17,10 @@ public sealed class UpdatePatientCommandHandler
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public Task<RespondPatientDto> Handle(UpdatePatientCommand command)
+    public Task<RespondPatientDto> Handle(UpdatePatientCommand command, CancellationToken cancellationToken = default)
     {
-        if (command is null)
-        {
-            throw new ArgumentNullException(nameof(command));
-        }
-        
+        if (command is null) throw new ArgumentNullException(nameof(command));
+
         var patientEntity = _mapper.Map<PatientEntity>(command.RequestPatientDto);
         patientEntity.Id = command.Id;
         patientEntity.AddressId = command.AddressId;

@@ -2,6 +2,8 @@
 using MedicalDocumentationManager.Database.Contexts.Configurations.DataSeeds;
 using MedicalDocumentationManager.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedicalDocumentationManager.Database.Contexts.Implementations;
 
@@ -20,6 +22,11 @@ public class MedicalDocumentationManagerDbContext : DbContext, IMedicalDocumenta
         SeedDataBase(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
+    }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning));
     }
 
     private static void SeedDataBase(ModelBuilder modelBuilder)
@@ -44,11 +51,43 @@ public class MedicalDocumentationManagerDbContext : DbContext, IMedicalDocumenta
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        foreach (var entry in ChangeTracker.Entries<AddressEntity>())
+            if (entry.State is EntityState.Deleted or EntityState.Modified)
+            {
+                var addressEntity = entry.Entity;
+                if (addressEntity.Doctors != null && !addressEntity.Doctors.Any()
+                                                  && addressEntity.Patients != null && !addressEntity.Patients.Any())
+                    entry.State = EntityState.Deleted;
+            }
+
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    public void DetachEntity(object entity)
+    public void DetachEntitiesInChangeTracker()
     {
-        Entry(entity).State = EntityState.Detached;
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            entry.State = EntityState.Detached;
+        }
+    }
+
+    public IDbContextTransaction BeginTransaction()
+    {
+        return Database.BeginTransaction();
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        return await Database.BeginTransactionAsync(cancellationToken);
+    }
+
+    public void CommitTransaction(IDbContextTransaction transaction)
+    {
+        transaction.Commit();
+    }
+
+    public void RollbackTransaction(IDbContextTransaction transaction)
+    {
+        transaction.Rollback();
     }
 }

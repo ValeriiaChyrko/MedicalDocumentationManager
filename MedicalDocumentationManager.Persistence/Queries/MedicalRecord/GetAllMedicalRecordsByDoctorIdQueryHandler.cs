@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MedicalDocumentationManager.Persistence.Queries.MedicalRecord;
 
 public sealed class GetAllMedicalRecordsByDoctorIdQueryHandler
+    : IRequestHandler<GetAllMedicalRecordsByDoctorIdQuery, IEnumerable<RespondMedicalRecordDto>>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;

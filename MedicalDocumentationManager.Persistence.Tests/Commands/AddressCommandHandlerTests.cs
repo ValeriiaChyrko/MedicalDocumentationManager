@@ -147,6 +147,7 @@ public class AddressCommandHandlerTests
 
         var resultCreate = await handlerCreate.Handle(commandCreate, CancellationToken.None);
         await _context.SaveChangesAsync();
+        _context.DetachEntitiesInChangeTracker();
 
         var handlerUpdate = new UpdateAddressCommandHandler(_context, _mapper);
         var commandUpdate = new UpdateAddressCommand

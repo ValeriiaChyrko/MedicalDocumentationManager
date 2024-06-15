@@ -163,6 +163,8 @@ public class PatientCommandHandlerTests
         );
 
         var createdPatient = await handler.Handle(createCommand, CancellationToken.None);
+        await _context.SaveChangesAsync();
+        _context.DetachEntitiesInChangeTracker();
 
         var updateHandler = new UpdatePatientCommandHandler(_context, _mapper);
         var updateCommand = new UpdatePatientCommand

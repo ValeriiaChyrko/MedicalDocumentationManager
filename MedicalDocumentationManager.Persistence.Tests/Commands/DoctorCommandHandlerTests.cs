@@ -159,6 +159,7 @@ public class DoctorCommandHandlerTests
             
         var resultCreate = await handlerCreate.Handle(commandCreate, CancellationToken.None);
         await _context.SaveChangesAsync();
+        _context.DetachEntitiesInChangeTracker();
             
         var handlerUpdate = new UpdateDoctorCommandHandler(_context, _mapper);
         var commandUpdate = new UpdateDoctorCommand

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Doctor;
 
-public sealed class CreateDoctorCommandHandler
+public sealed class CreateDoctorCommandHandler : IRequestHandler<CreateDoctorCommand, RespondDoctorDto>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;
@@ -22,12 +23,11 @@ public sealed class CreateDoctorCommandHandler
         {
             throw new ArgumentNullException(nameof(command));
         }
-        
+
         var doctorEntity = _mapper.Map<DoctorEntity>(command.RequestDoctorDto);
         doctorEntity.AddressId = command.AddressId;
-        
+
         var addedEntity = await _context.DoctorEntities.AddAsync(doctorEntity, cancellationToken);
-        _context.DetachEntity(doctorEntity);
 
         return _mapper.Map<RespondDoctorDto>(addedEntity.Entity);
     }

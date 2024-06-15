@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Address;
 
-public sealed class GetAddressByIdQueryHandler
+public sealed class GetAddressByIdQueryHandler : IRequestHandler<GetAddressByIdQuery, AddressDto?>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;

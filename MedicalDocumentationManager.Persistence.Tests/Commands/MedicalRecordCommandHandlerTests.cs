@@ -201,6 +201,7 @@ public class MedicalRecordCommandHandlerTests
         var createHandler = new CreateMedicalRecordCommandHandler(_context, _mapper);
         var createdMedicalRecord = await createHandler.Handle(createCommand, CancellationToken.None);
         await _context.SaveChangesAsync();
+        _context.DetachEntitiesInChangeTracker();
 
         var updateCommand = new UpdateMedicalRecordCommand(createdMedicalRecord.Id, new RequestMedicalRecordDto
         {

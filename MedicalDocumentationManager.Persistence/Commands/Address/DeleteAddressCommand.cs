@@ -1,3 +1,5 @@
-﻿namespace MedicalDocumentationManager.Persistence.Commands.Address;
+﻿using MediatR;
 
-public sealed record DeleteAddressCommand(long Id);
+namespace MedicalDocumentationManager.Persistence.Commands.Address;
+
+public sealed record DeleteAddressCommand(long Id) : IRequest;

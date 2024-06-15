@@ -1,5 +1,8 @@
-﻿using MedicalDocumentationManager.DTOs.RequestsDTOs;
+﻿using MediatR;
+using MedicalDocumentationManager.DTOs.RequestsDTOs;
+using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Patient;
 
-public sealed record UpdatePatientCommand(Guid Id, RequestPatientDto RequestPatientDto, long AddressId);
+public sealed record UpdatePatientCommand
+    (Guid Id, RequestPatientDto RequestPatientDto, long AddressId) : IRequest<RespondPatientDto>;

@@ -1,8 +1,9 @@
-﻿using MedicalDocumentationManager.Database.Contexts.Abstractions;
+﻿using MediatR;
+using MedicalDocumentationManager.Database.Contexts.Abstractions;
 
 namespace MedicalDocumentationManager.Persistence.Commands.Subscription;
 
-public sealed class DeleteSubscriptionCommandHandler
+public sealed class DeleteSubscriptionCommandHandler : IRequestHandler<DeleteSubscriptionCommand>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
 
@@ -13,15 +14,9 @@ public sealed class DeleteSubscriptionCommandHandler
 
     public async Task Handle(DeleteSubscriptionCommand command, CancellationToken cancellationToken)
     {
-        if (command is null)
-        {
-            throw new ArgumentNullException(nameof(command));
-        }
-        
+        if (command is null) throw new ArgumentNullException(nameof(command));
+
         var subscriptionEntity = await _context.SubscriptionEntities.FindAsync(command.Id, cancellationToken);
-        if (subscriptionEntity!= null)
-        {
-            _context.SubscriptionEntities.Remove(subscriptionEntity);
-        }
+        if (subscriptionEntity != null) _context.SubscriptionEntities.Remove(subscriptionEntity);
     }
 }

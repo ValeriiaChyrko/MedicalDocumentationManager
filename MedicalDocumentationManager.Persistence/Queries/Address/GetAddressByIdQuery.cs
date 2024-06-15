@@ -1,3 +1,6 @@
-﻿namespace MedicalDocumentationManager.Persistence.Queries.Address;
+﻿using MediatR;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
-public record GetAddressByIdQuery(long Id);
+namespace MedicalDocumentationManager.Persistence.Queries.Address;
+
+public record GetAddressByIdQuery(long Id) : IRequest<AddressDto?>;

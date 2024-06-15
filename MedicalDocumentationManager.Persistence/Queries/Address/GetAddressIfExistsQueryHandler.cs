@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.SharedDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Address;
 
-public sealed class GetAllAddressesQueryHandler
+public sealed class GetAddressIfExistsQueryHandler : IRequestHandler<GetAddressIfExistsQuery, AddressDto?>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetAllAddressesQueryHandler(IMedicalDocumentationManagerDbContext context, IMapper mapper)
+    public GetAddressIfExistsQueryHandler(IMedicalDocumentationManagerDbContext context, IMapper mapper)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

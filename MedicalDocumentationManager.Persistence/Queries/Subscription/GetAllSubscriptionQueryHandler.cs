@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.SharedDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
 
-public sealed class GetAllSubscriptionQueryHandler
+public sealed class
+    GetAllSubscriptionQueryHandler : IRequestHandler<GetAllSubscriptionQuery, IEnumerable<SubscriptionDto>>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;

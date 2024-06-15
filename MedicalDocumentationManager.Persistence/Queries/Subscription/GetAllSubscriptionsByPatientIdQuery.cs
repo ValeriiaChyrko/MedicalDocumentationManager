@@ -1,3 +1,6 @@
-﻿namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
+﻿using MediatR;
+using MedicalDocumentationManager.DTOs.SharedDTOs;
 
-public record GetAllSubscriptionsByPatientIdQuery(Guid PatientId);
+namespace MedicalDocumentationManager.Persistence.Queries.Subscription;
+
+public record GetAllSubscriptionsByPatientIdQuery(Guid PatientId) : IRequest<IEnumerable<SubscriptionDto>>;

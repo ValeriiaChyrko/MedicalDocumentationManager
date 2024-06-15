@@ -1,3 +1,6 @@
-﻿namespace MedicalDocumentationManager.Persistence.Queries.Doctor;
+﻿using MediatR;
+using MedicalDocumentationManager.DTOs.RespondDTOs;
 
-public record GetDoctorByIdQuery(Guid Id);
+namespace MedicalDocumentationManager.Persistence.Queries.Doctor;
+
+public record GetDoctorByIdQuery(Guid Id) : IRequest<RespondDoctorDto?>;

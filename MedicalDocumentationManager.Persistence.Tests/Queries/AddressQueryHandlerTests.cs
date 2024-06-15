@@ -76,7 +76,7 @@ public class AddressQueryHandlerTests
     public async Task Handle_GetAllAddressesQuery_ReturnsAddressDto_WhenAddressExists()
     {
         // Arrange
-        var handler = new GetAllAddressesQueryHandler(_context, _mapper);
+        var handler = new GetAddressIfExistsQueryHandler(_context, _mapper);
         var query = new GetAddressIfExistsQuery(new AddressDto
         {
             Street = _seedDataAddress.Street,
@@ -101,7 +101,7 @@ public class AddressQueryHandlerTests
     public async Task Handle_GetAddressIfExistsQuery_ReturnsNull_WhenAddressDoesNotExist()
     {
         // Arrange
-        var handler = new GetAllAddressesQueryHandler(_context, _mapper);
+        var handler = new GetAddressIfExistsQueryHandler(_context, _mapper);
         var query = new GetAddressIfExistsQuery(new AddressDto
         {
             Street = "Non-Existing Street",

@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Doctor;
 
-public sealed class GetDoctorByIdQueryHandler
+public sealed class GetDoctorByIdQueryHandler : IRequestHandler<GetDoctorByIdQuery, RespondDoctorDto?>
 {
     private readonly IMedicalDocumentationManagerDbContext _context;
     private readonly IMapper _mapper;

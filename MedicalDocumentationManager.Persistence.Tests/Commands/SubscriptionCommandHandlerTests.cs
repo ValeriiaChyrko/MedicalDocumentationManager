@@ -184,6 +184,7 @@ public class SubscriptionCommandHandlerTests
         });
         var createdSubscription = await new CreateSubscriptionCommandHandler(_context, _mapper).Handle(createCommand, CancellationToken.None);
         await _context.SaveChangesAsync();
+        _context.DetachEntitiesInChangeTracker();
         
         var updateCommand = new UpdateSubscriptionCommand(createdSubscription.Id, new SubscriptionDto
         {

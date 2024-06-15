@@ -1,5 +1,4 @@
-﻿using MedicalDocumentationManager.DTOs.RequestsDTOs;
-using MedicalDocumentationManager.DTOs.SharedDTOs;
+﻿using MedicalDocumentationManager.DTOs.SharedDTOs;
 
 namespace MedicalDocumentationManager.DTOs.RespondDTOs;
 
@@ -11,7 +10,7 @@ public class RespondPatientDto
     public long AddressId { get; set; }
     public required string PhoneNumber { get; set; }
     public required string Email { get; set; }
-    public required AddressDto  Address { get; set; }
+    public required AddressDto Address { get; set; }
     public required string InsuranceProvider { get; set; }
     public required string InsurancePolicyNumber { get; set; }
 }

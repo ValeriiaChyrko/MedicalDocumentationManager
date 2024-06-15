@@ -1,3 +1,5 @@
-﻿namespace MedicalDocumentationManager.Persistence.Commands.Subscription;
+﻿using MediatR;
 
-public sealed record DeleteSubscriptionCommand(long Id);
+namespace MedicalDocumentationManager.Persistence.Commands.Subscription;
+
+public sealed record DeleteSubscriptionCommand(long Id) : IRequest;
