@@ -26,9 +26,4 @@
         <ProjectReference Include="..\MedicalDocumentationManager.DTOs\MedicalDocumentationManager.DTOs.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="MedicalRecordServiceObserverTests.cs" />
-      <None Include="MedicalRecordServiceObserverTests.cs" />
-    </ItemGroup>
-
 </Project>

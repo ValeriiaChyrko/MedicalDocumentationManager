@@ -20,7 +20,7 @@ public class MedicalRecordObserverTests
     public void Subscribe_DoesNotThrowArgumentNullException_WhenOnNotifyEventIsNull()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
 
         // Act and Assert
@@ -31,7 +31,7 @@ public class MedicalRecordObserverTests
     public void Subscribe_ThrowsInvalidOperationException_WhenOnMedicalRecordUpdatedIsAlreadySubscribed()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
         observer.Subscribe();
 
@@ -46,7 +46,7 @@ public class MedicalRecordObserverTests
     public void UnSubscribe_ThrowsInvalidOperationException_WhenOnMedicalRecordUpdatedIsNotSubscribed()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
 
         // Act
@@ -71,21 +71,21 @@ public class MedicalRecordObserverTests
     public void Subscribe_ShouldAttachEventHandler_ToRecordUpdatedEvent()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
 
         // Act
         observer.Subscribe();
 
         // Assert
-        record.Updated += Arg.Any<EventHandler<MessageEventArgs>>();
+        record.OnUpdateEvent += Arg.Any<EventHandler<MessageEventArgs>>();
     }
 
     [Test]
     public void Unsubscribe_ShouldDetachEventHandler_FromRecordUpdatedEvent()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
         observer.Subscribe();
 
@@ -93,14 +93,14 @@ public class MedicalRecordObserverTests
         observer.Unsubscribe();
 
         // Assert
-        record.Updated -= Arg.Any<EventHandler<MessageEventArgs>>();
+        record.OnUpdateEvent -= Arg.Any<EventHandler<MessageEventArgs>>();
     }
 
     [Test]
     public void OnMedicalRecordUpdated_ShouldInvokeOnNotifyEvent_WhenUpdatedEventIsRaised()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var observer = new MedicalRecordObserver(record);
         var onNotifyEventInvoked = false;
 
@@ -122,12 +122,12 @@ public class MedicalRecordObserverTests
     public void IsRegistered_ReturnsTrue_WhenHandlerIsRegistered()
     {
         // Arrange
-        var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Initial record");
+        var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Initial record", DateTime.Now, DateTime.Now);
         var handler = new EventHandler<MessageEventArgs>((_, _) => { });
-        medicalRecord.Updated += handler;
+        medicalRecord.OnUpdateEvent += handler;
 
         // Act
-        var result = medicalRecord.IsRegistered(handler);
+        var result = medicalRecord.IsObserverRegistered(handler);
 
         // Assert
         result.Should().BeTrue();
@@ -137,11 +137,11 @@ public class MedicalRecordObserverTests
     public void IsRegistered_ReturnsFalse_WhenHandlerIsNotRegistered()
     {
         // Arrange
-        var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Initial record");
+        var medicalRecord = MedicalRecord.Create(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Initial record", DateTime.Now, DateTime.Now);
         var handler = new EventHandler<MessageEventArgs>((_, _) => { });
 
         // Act
-        var result = medicalRecord.IsRegistered(handler);
+        var result = medicalRecord.IsObserverRegistered(handler);
 
         // Assert
         result.Should().BeFalse();

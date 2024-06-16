@@ -16,7 +16,7 @@ public class MedicalRecordNotifier : IMedicalRecordNotifier
 
     public void Unsubscribe()
     {
-        if (!_recordObserver.IsRegistered(Notify))
+        if (!_recordObserver.IsObserverRegistered(Notify))
             throw new InvalidOperationException($"The observer is not subscribed to the {nameof(Notify)} event.");
 
         _recordObserver.OnNotifyEvent -= Notify;
@@ -24,7 +24,7 @@ public class MedicalRecordNotifier : IMedicalRecordNotifier
 
     public void Subscribe()
     {
-        if (_recordObserver.IsRegistered(Notify))
+        if (_recordObserver.IsObserverRegistered(Notify))
             throw new InvalidOperationException($"The observer is already subscribed to the {nameof(Notify)} event.");
 
         _recordObserver.OnNotifyEvent += Notify;

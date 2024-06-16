@@ -3,6 +3,7 @@ using MediatR;
 using MedicalDocumentationManager.Application.Abstractions.Contracts;
 using MedicalDocumentationManager.Domain.Abstraction;
 using MedicalDocumentationManager.Domain.Abstraction.Contracts;
+using MedicalDocumentationManager.Domain.Implementation;
 using MedicalDocumentationManager.DTOs.RequestsDTOs;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
 using MedicalDocumentationManager.Persistence.Abstractions.Exceptions;
@@ -17,13 +18,18 @@ public class MedicalRecordService : IMedicalRecordService
     private readonly IDatabaseTransactionManager _transactionManager;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IMessageHandler _messageHandler;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public MedicalRecordService(ILogger logger, IDatabaseTransactionManager transactionManager, IMediator mediator, IMapper mapper)
+    public MedicalRecordService(ILogger logger, IDatabaseTransactionManager transactionManager, 
+        IMediator mediator, IMapper mapper, IMessageHandler messageHandler, ISubscriptionService subscriptionService)
     {
         _logger = logger;
         _transactionManager = transactionManager;
         _mediator = mediator;
         _mapper = mapper;
+        _messageHandler = messageHandler;
+        _subscriptionService = subscriptionService;
     }
 
     public async Task<RespondMedicalRecordDto> CreateMedicalRecordAsync(RequestMedicalRecordDto medicalRecord, CancellationToken cancellationToken = default)
@@ -54,8 +60,13 @@ public class MedicalRecordService : IMedicalRecordService
         {
             var result = 
                 await _mediator.Send(new UpdateMedicalRecordCommand(id, medicalRecordDto), cancellationToken);
-            
+
             var medicalRecord = _mapper.Map<MedicalRecord>(result);
+            var medicalRecordObserver = new MedicalRecordObserver(medicalRecord);
+            var medicalRecordNotifier = new MedicalRecordNotifier(medicalRecordObserver, _messageHandler);
+
+            await _subscriptionService.ProcessMedicalRecordSubscriptions(id, medicalRecordObserver, medicalRecordNotifier, cancellationToken);
+            
             medicalRecord.Update(medicalRecordDto.PatientId, medicalRecordDto.DoctorId, medicalRecordDto.Record);
             
             await _transactionManager.CommitAsync(transaction, cancellationToken);

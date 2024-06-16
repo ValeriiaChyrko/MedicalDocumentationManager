@@ -31,7 +31,7 @@ public class PatientObserverTests
         const string insuranceProvider = "Blue Cross";
         const string insurancePolicyNumber = "123456";
 
-        return new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber,
+        return Patient.Create(id, name, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber,
             medicalRecordObserver, medicalRecordNotifier);
     }
 
@@ -65,7 +65,7 @@ public class PatientObserverTests
     public void SubscribeToMedicalRecordNotifications_CallsSubscribeOnNotifier()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var recordObserver = Substitute.For<MedicalRecordObserver>(record);
         var messageHandler = Substitute.For<IMessageHandler>();
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);
@@ -82,7 +82,7 @@ public class PatientObserverTests
     public void UnsubscribeFromMedicalRecordNotifications_CallsUnsubscribeOnNotifier()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty, DateTime.Now, DateTime.Now);
         var recordObserver = Substitute.For<MedicalRecordObserver>(record);
         var messageHandler = Substitute.For<IMessageHandler>();
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);

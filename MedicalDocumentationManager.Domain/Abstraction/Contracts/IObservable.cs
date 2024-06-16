@@ -2,5 +2,6 @@
 
 public interface IObservable
 {
-    event EventHandler<MessageEventArgs>? Updated;
+    event EventHandler<MessageEventArgs>? OnUpdateEvent;
+    bool IsObserverRegistered(Delegate prospectiveObserver);
 }

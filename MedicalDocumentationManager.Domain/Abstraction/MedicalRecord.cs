@@ -11,9 +11,9 @@ public class MedicalRecord : IObservable
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; private set; }
 
-    public event EventHandler<MessageEventArgs>? Updated;
+    public event EventHandler<MessageEventArgs>? OnUpdateEvent;
 
-    private MedicalRecord(Guid id, Guid patientId, Guid doctorId, string record, DateTime createdAt, DateTime updatedAt)
+    public MedicalRecord(Guid id, Guid patientId, Guid doctorId, string record, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         PatientId = patientId;
@@ -23,10 +23,10 @@ public class MedicalRecord : IObservable
         UpdatedAt = updatedAt;
     }
 
-    public static MedicalRecord Create(Guid id, Guid patientId, Guid doctorId, string record)
+    public static MedicalRecord Create(Guid id, Guid patientId, Guid doctorId, string record,
+        DateTime createdAt, DateTime updatedAt)
     {
-        var currentDateTime = DateTime.Now;
-        var newRecord = new MedicalRecord(id, patientId, doctorId, record, currentDateTime, currentDateTime);
+        var newRecord = new MedicalRecord(id, patientId, doctorId, record, createdAt, updatedAt);
 
         return newRecord;
     }
@@ -38,13 +38,13 @@ public class MedicalRecord : IObservable
         Record = record;
         UpdatedAt = DateTime.Now;
 
-        Updated?.Invoke(this, new MessageEventArgs(Record));
+        OnUpdateEvent?.Invoke(this, new MessageEventArgs(Record));
     }
 
-    public bool IsRegistered(Delegate prospectiveHandler)
+    public bool IsObserverRegistered(Delegate prospectiveObserver)
     {
-        return Updated != null
-               && Updated.GetInvocationList()
-                   .Any(existingHandler => existingHandler.Method == prospectiveHandler.Method);
+        return OnUpdateEvent != null
+               && OnUpdateEvent.GetInvocationList()
+                   .Any(existingHandler => existingHandler.Method == prospectiveObserver.Method);
     }
 }

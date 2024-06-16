@@ -13,9 +13,4 @@
         <ProjectReference Include="..\MedicalDocumentationManager.Persistence\MedicalDocumentationManager.Persistence.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="Implementations\SubscriptionService.cs" />
-      <None Include="Implementations\SubscriptionService.cs" />
-    </ItemGroup>
-
 </Project>

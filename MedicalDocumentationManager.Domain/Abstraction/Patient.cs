@@ -10,7 +10,7 @@ public class Patient : User
     private readonly IMedicalRecordObserver _medicalRecordObserver;
     private readonly IMedicalRecordNotifier _medicalRecordNotifier;
 
-    public Patient(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email,
+    protected Patient(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email,
         string insuranceProvider, string insurancePolicyNumber,
         IMedicalRecordObserver medicalRecordObserver, IMedicalRecordNotifier medicalRecordNotifier)
         : base(id, fullName, birthDate, address, phoneNumber, email)
@@ -19,6 +19,16 @@ public class Patient : User
         InsurancePolicyNumber = insurancePolicyNumber;
         _medicalRecordObserver = medicalRecordObserver;
         _medicalRecordNotifier = medicalRecordNotifier;
+    }
+
+    public static Patient Create(Guid id, string fullName, DateOnly birthDate, Address address, string phoneNumber, string email,
+        string insuranceProvider, string insurancePolicyNumber,
+        IMedicalRecordObserver medicalRecordObserver, IMedicalRecordNotifier medicalRecordNotifier)
+    {
+        var patient = new Patient(id, fullName, birthDate, address, phoneNumber, email, insuranceProvider, insurancePolicyNumber,
+            medicalRecordObserver, medicalRecordNotifier);
+
+        return patient;
     }
 
     public void SubscribeToMedicalRecordUpdates()

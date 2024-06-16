@@ -14,6 +14,7 @@ public class PatientMappingProfile : Profile
             .ForMember(dest => dest.AddressEntity, opt => opt.Ignore())
             .ForMember(dest => dest.MedicalRecords, opt => opt.Ignore());
 
-        CreateMap<PatientEntity, RespondPatientDto>();
+        CreateMap<PatientEntity, RespondPatientDto>()
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.AddressEntity));
     }
 }

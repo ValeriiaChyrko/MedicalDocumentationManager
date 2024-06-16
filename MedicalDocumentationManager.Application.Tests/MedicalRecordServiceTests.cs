@@ -16,6 +16,8 @@ namespace MedicalDocumentationManager.Application.Tests
         private IMediator _mediator = null!;
         private IDatabaseTransactionManager _transactionManager = null!;
         private ILogger _logger = null!;
+        private ISubscriptionService _subscriptionService = null!;
+        private IMessageHandler _messageHandler = null!;
         private MedicalRecordService _medicalRecordService = null!;
 
         [SetUp]
@@ -24,8 +26,10 @@ namespace MedicalDocumentationManager.Application.Tests
             _mediator = Substitute.For<IMediator>();
             _transactionManager = Substitute.For<IDatabaseTransactionManager>();
             _logger = Substitute.For<ILogger>();
+            _subscriptionService = Substitute.For<ISubscriptionService>();
             var mapper = Substitute.For<IMapper>();
-            _medicalRecordService = new MedicalRecordService(_logger, _transactionManager, _mediator, mapper);
+            _messageHandler = Substitute.For<IMessageHandler>();
+            _medicalRecordService = new MedicalRecordService(_logger, _transactionManager, _mediator, mapper, _messageHandler, _subscriptionService);
         }
 
         [Test]

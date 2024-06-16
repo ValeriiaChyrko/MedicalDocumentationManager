@@ -67,7 +67,7 @@ public class AbstractionTests
         const string record = "Some medical record";
 
         // Act
-        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record);
+        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record, DateTime.Now, DateTime.Now);
 
         // Assert
         medicalRecord.PatientId.Should().Be(patientId);
@@ -86,7 +86,7 @@ public class AbstractionTests
         var patientId = Guid.NewGuid();
         var doctorId = Guid.NewGuid();
         const string record = "Some medical record";
-        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record);
+        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record, DateTime.Now, DateTime.Now);
 
         // Act
         medicalRecord.Update(patientId, doctorId, "Updated medical record");
@@ -115,7 +115,7 @@ public class AbstractionTests
         var medicalRecordNotifier = Substitute.For<IMedicalRecordNotifier>();
 
         // Act
-        var patient = new Patient(id, name, birthDate, address, phoneNumber, email, insuranceProvider,
+        var patient = Patient.Create(id, name, birthDate, address, phoneNumber, email, insuranceProvider,
             insurancePolicyNumber, medicalRecordObserver, medicalRecordNotifier);
 
         // Assert

@@ -5,42 +5,42 @@ namespace MedicalDocumentationManager.Domain.Implementation;
 
 public class MedicalRecordObserver : IMedicalRecordObserver
 {
-    private readonly MedicalRecord _record;
+    private readonly IObservable _medicalRecord;
     public event EventHandler<MessageEventArgs>? OnNotifyEvent;
 
-    public MedicalRecordObserver(MedicalRecord record)
+    public MedicalRecordObserver(IObservable medicalRecord)
     {
-        _record = record ?? throw new ArgumentNullException(nameof(record));
+        _medicalRecord = medicalRecord ?? throw new ArgumentNullException(nameof(medicalRecord));
     }
 
     public void Unsubscribe()
     {
-        if (!_record.IsRegistered(OnMedicalRecordUpdated))
+        if (!_medicalRecord.IsObserverRegistered(OnMedicalMedicalRecordOnUpdateEvent))
             throw new InvalidOperationException(
-                $"The observer is not subscribed to the {nameof(OnMedicalRecordUpdated)} event.");
+                $"The observer is not subscribed to the {nameof(OnMedicalMedicalRecordOnUpdateEvent)} event.");
 
-        _record.Updated -= OnMedicalRecordUpdated;
+        _medicalRecord.OnUpdateEvent -= OnMedicalMedicalRecordOnUpdateEvent;
     }
 
     public void Subscribe()
     {
-        if (_record.IsRegistered(OnMedicalRecordUpdated))
+        if (_medicalRecord.IsObserverRegistered(OnMedicalMedicalRecordOnUpdateEvent))
             throw new InvalidOperationException(
-                $"The observer is already subscribed to the {nameof(OnMedicalRecordUpdated)} event.");
+                $"The observer is already subscribed to the {nameof(OnMedicalMedicalRecordOnUpdateEvent)} event.");
 
-        _record.Updated += OnMedicalRecordUpdated;
+        _medicalRecord.OnUpdateEvent += OnMedicalMedicalRecordOnUpdateEvent;
     }
 
-    private void OnMedicalRecordUpdated(object? sender, MessageEventArgs e)
+    private void OnMedicalMedicalRecordOnUpdateEvent(object? sender, MessageEventArgs e)
     {
         e.Message = $"Medical history was updated: {e.Message}";
         OnNotifyEvent?.Invoke(this, e);
     }
 
-    public bool IsRegistered(Delegate prospectiveHandler)
+    public bool IsObserverRegistered(Delegate prospectiveObserver)
     {
         return OnNotifyEvent != null
                && OnNotifyEvent.GetInvocationList()
-                   .Any(existingHandler => existingHandler.Method == prospectiveHandler.Method);
+                   .Any(existingHandler => existingHandler.Method == prospectiveObserver.Method);
     }
 }
