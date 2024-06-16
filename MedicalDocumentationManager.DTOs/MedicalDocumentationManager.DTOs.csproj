@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MedicalDocumentationManager.Database\MedicalDocumentationManager.Database.csproj"/>
+        <ProjectReference Include="..\MedicalDocumentationManager.Domain\MedicalDocumentationManager.Domain.csproj" />
     </ItemGroup>
 
 </Project>

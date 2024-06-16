@@ -2,6 +2,7 @@ using MedicalDocumentationManager.Database.Contexts.Implementations;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedicalDocumentationManager.Database.Tests;
 
@@ -206,5 +207,16 @@ public class DatabaseDbContextTests
             .Single(fk => fk.Properties.Contains(medicalRecordEntityType.FindProperty("PatientId")));
         medicalRecordPatientForeignKey?.IsRequired.Should().BeTrue();
         medicalRecordPatientForeignKey?.DeleteBehavior.Should().Be(DeleteBehavior.NoAction);
+    }
+    
+    [Test]
+    public async Task BeginTransactionAsync_ReturnsTransaction_WhenCalled()
+    {
+        // Act
+        var transaction = await _context.BeginTransactionAsync();
+
+        // Assert
+        transaction.Should().NotBeNull();
+        transaction.Should().BeAssignableTo<IDbContextTransaction>();
     }
 }

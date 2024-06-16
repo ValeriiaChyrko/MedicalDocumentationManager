@@ -55,7 +55,7 @@ namespace MedicalDocumentationManager.DTOs.Tests
         [Test]
         public void Should_Have_Error_When_Address_Is_Null()
         {
-            var model = new RequestPatientDto { FullName = "John Doe", BirthDate = DateOnly.FromDateTime(DateTime.Today.AddYears(-30)), PhoneNumber = "+1234567890", Email = "test@example.com", Address = null, InsuranceProvider = "Insurance Co", InsurancePolicyNumber = "12345" };
+            var model = new RequestPatientDto { FullName = "John Doe", BirthDate = DateOnly.FromDateTime(DateTime.Today.AddYears(-30)), PhoneNumber = "+1234567890", Email = "test@example.com", Address = null!, InsuranceProvider = "Insurance Co", InsurancePolicyNumber = "12345" };
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(x => x.Address)
                 .WithErrorMessage("Address cannot be null.");

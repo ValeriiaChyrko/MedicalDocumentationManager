@@ -65,7 +65,7 @@ public class PatientObserverTests
     public void SubscribeToMedicalRecordNotifications_CallsSubscribeOnNotifier()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
         var recordObserver = Substitute.For<MedicalRecordObserver>(record);
         var messageHandler = Substitute.For<IMessageHandler>();
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);
@@ -82,7 +82,7 @@ public class PatientObserverTests
     public void UnsubscribeFromMedicalRecordNotifications_CallsUnsubscribeOnNotifier()
     {
         // Arrange
-        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, string.Empty);
+        var record = MedicalRecord.Create(Guid.Empty, Guid.Empty, Guid.Empty, string.Empty);
         var recordObserver = Substitute.For<MedicalRecordObserver>(record);
         var messageHandler = Substitute.For<IMessageHandler>();
         var notifier = new MedicalRecordNotifier(recordObserver, messageHandler);

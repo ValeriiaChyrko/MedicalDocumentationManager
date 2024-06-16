@@ -23,16 +23,15 @@ public class MedicalRecord : IObservable
         UpdatedAt = updatedAt;
     }
 
-    public static MedicalRecord Create(Guid patientId, Guid doctorId, string record)
+    public static MedicalRecord Create(Guid id, Guid patientId, Guid doctorId, string record)
     {
-        var id = Guid.NewGuid();
         var currentDateTime = DateTime.Now;
         var newRecord = new MedicalRecord(id, patientId, doctorId, record, currentDateTime, currentDateTime);
 
         return newRecord;
     }
 
-    public MedicalRecord Update(Guid patientId, Guid doctorId, string record)
+    public void Update(Guid patientId, Guid doctorId, string record)
     {
         PatientId = patientId;
         DoctorId = doctorId;
@@ -40,8 +39,6 @@ public class MedicalRecord : IObservable
         UpdatedAt = DateTime.Now;
 
         Updated?.Invoke(this, new MessageEventArgs(Record));
-
-        return this;
     }
 
     public bool IsRegistered(Delegate prospectiveHandler)

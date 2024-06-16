@@ -117,6 +117,7 @@ public class DatabaseTransactionManager : IDatabaseTransactionManager
     public void Dispose()
     {
         _transaction?.Dispose();
+        _transaction = null;
     }
 
     public async ValueTask DisposeAsync()

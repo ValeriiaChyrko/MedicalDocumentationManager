@@ -14,7 +14,7 @@ public class MedicalRecordMappingProfile : Profile
             .ForMember(dest => dest.PatientEntity, opt => opt.Ignore())
             .ForMember(dest => dest.DoctorEntity, opt => opt.Ignore())
             .ForMember(dest => dest.Subscriptions, opt => opt.Ignore());
-
+        
         CreateMap<MedicalRecordEntity, RespondMedicalRecordDto>();
     }
 }

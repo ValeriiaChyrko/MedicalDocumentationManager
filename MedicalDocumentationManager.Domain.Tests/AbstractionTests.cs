@@ -61,12 +61,13 @@ public class AbstractionTests
     public void Create_CreatesMedicalRecord_WithCorrectProperties()
     {
         // Arrange
+        var id = Guid.NewGuid();
         var patientId = Guid.NewGuid();
         var doctorId = Guid.NewGuid();
         const string record = "Some medical record";
 
         // Act
-        var medicalRecord = MedicalRecord.Create(patientId, doctorId, record);
+        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record);
 
         // Assert
         medicalRecord.PatientId.Should().Be(patientId);
@@ -81,10 +82,11 @@ public class AbstractionTests
     public void Update_UpdatesMedicalRecord_WithCorrectProperties()
     {
         // Arrange
+        var id = Guid.NewGuid();
         var patientId = Guid.NewGuid();
         var doctorId = Guid.NewGuid();
         const string record = "Some medical record";
-        var medicalRecord = MedicalRecord.Create(patientId, doctorId, record);
+        var medicalRecord = MedicalRecord.Create(id, patientId, doctorId, record);
 
         // Act
         medicalRecord.Update(patientId, doctorId, "Updated medical record");
