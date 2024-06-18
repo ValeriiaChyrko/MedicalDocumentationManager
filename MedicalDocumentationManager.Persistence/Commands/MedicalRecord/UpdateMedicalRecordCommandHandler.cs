@@ -25,6 +25,7 @@ public sealed class
 
         var medicalRecordEntity = _mapper.Map<MedicalRecordEntity>(command.RequestMedicalRecordDto);
         medicalRecordEntity.Id = command.Id;
+        medicalRecordEntity.UpdatedAt = DateTime.UtcNow;
 
         _context.MedicalRecordEntities.Update(medicalRecordEntity);
 

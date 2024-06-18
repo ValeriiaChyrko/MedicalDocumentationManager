@@ -15,6 +15,8 @@ public class AddressMappingProfile : Profile
             .ForMember(dest => dest.Doctors, opt => opt.Ignore())
             .ReverseMap();
 
-        CreateMap<Address, AddressDto>().ReverseMap();
+        CreateMap<Address, AddressDto>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ReverseMap();
     }
 }

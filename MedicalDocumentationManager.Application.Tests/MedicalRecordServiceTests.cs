@@ -1,5 +1,6 @@
 ﻿using MedicalDocumentationManager.Application.Implementations;
 using MedicalDocumentationManager.Application.Abstractions.Contracts;
+using MedicalDocumentationManager.Domain.Abstraction;
 using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using MedicalDocumentationManager.DTOs.RequestsDTOs;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
@@ -19,6 +20,7 @@ namespace MedicalDocumentationManager.Application.Tests
         private ISubscriptionService _subscriptionService = null!;
         private IMessageHandler _messageHandler = null!;
         private MedicalRecordService _medicalRecordService = null!;
+        private IMapper _mapper = null!;
 
         [SetUp]
         public void SetUp()
@@ -27,9 +29,9 @@ namespace MedicalDocumentationManager.Application.Tests
             _transactionManager = Substitute.For<IDatabaseTransactionManager>();
             _logger = Substitute.For<ILogger>();
             _subscriptionService = Substitute.For<ISubscriptionService>();
-            var mapper = Substitute.For<IMapper>();
+            _mapper = Substitute.For<IMapper>();
             _messageHandler = Substitute.For<IMessageHandler>();
-            _medicalRecordService = new MedicalRecordService(_logger, _transactionManager, _mediator, mapper, _messageHandler, _subscriptionService);
+            _medicalRecordService = new MedicalRecordService(_logger, _transactionManager, _mediator, _mapper, _messageHandler, _subscriptionService);
         }
 
         [Test]
@@ -287,6 +289,45 @@ namespace MedicalDocumentationManager.Application.Tests
             // Act and Assert
             await FluentActions.Invoking(async () => await _medicalRecordService.GetMedicalRecordsByDoctorAsync(doctorId))
               .Should().ThrowAsync<DatabaseException>();
+        }
+        
+        [Test]
+        public async Task UpdateMedicalRecordAsync_ReturnsRespondMedicalRecordDto_WhenCalled()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var requestMedicalRecordDto = new RequestMedicalRecordDto
+            {
+                PatientId = Guid.NewGuid(),
+                DoctorId = Guid.NewGuid(),
+                Record = "Test Record",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            var respondMedicalRecordDto = new RespondMedicalRecordDto
+            {
+                Id = id,
+                PatientId = requestMedicalRecordDto.PatientId,
+                DoctorId = requestMedicalRecordDto.DoctorId,
+                Record = requestMedicalRecordDto.Record,
+                CreatedAt = requestMedicalRecordDto.CreatedAt,
+                UpdatedAt = requestMedicalRecordDto.UpdatedAt
+            };
+            var medicalRecord = MedicalRecord.Create(id, requestMedicalRecordDto.PatientId,
+                requestMedicalRecordDto.DoctorId,
+                requestMedicalRecordDto.Record, requestMedicalRecordDto.CreatedAt, requestMedicalRecordDto.UpdatedAt);
+
+            _mediator.Send(Arg.Any<UpdateMedicalRecordCommand>()).Returns(respondMedicalRecordDto);
+            _mapper.Map<MedicalRecord>(respondMedicalRecordDto).Returns(medicalRecord);
+
+            // Act
+            var result = await _medicalRecordService.UpdateMedicalRecordAsync(id, requestMedicalRecordDto);
+
+            // Assert
+            result.Should().BeEquivalentTo(respondMedicalRecordDto);
+            await _transactionManager
+                .Received(1)
+                .CommitAsync(Arg.Any<IDbContextTransaction>(), Arg.Any<CancellationToken>());
         }
     }
 }

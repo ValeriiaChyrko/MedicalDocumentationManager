@@ -5,7 +5,7 @@ namespace MedicalDocumentationManager.Database.Contexts.Implementations;
 
 public class MedicalDocumentationManagerInMemoryDbContextFactory : IMedicalDocumentationManagerDbContextFactory
 {
-    public MedicalDocumentationManagerDbContext CreateDbContext(string[] args)
+    public MedicalDocumentationManagerDbContext CreateDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<MedicalDocumentationManagerDbContext>();
         optionsBuilder.UseInMemoryDatabase("MedicalDocumentationManagerDb");

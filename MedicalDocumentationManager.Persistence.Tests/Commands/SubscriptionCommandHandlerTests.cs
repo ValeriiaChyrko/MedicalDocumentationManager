@@ -51,7 +51,7 @@ public class SubscriptionCommandHandlerTests
     public void SetUp()
     {
         _factory = new MedicalDocumentationManagerInMemoryDbContextFactory();
-        _context = _factory.CreateDbContext(Array.Empty<string>());
+        _context = _factory.CreateDbContext();
 
         var mapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile(new SubscriptionMappingProfile()); });
 

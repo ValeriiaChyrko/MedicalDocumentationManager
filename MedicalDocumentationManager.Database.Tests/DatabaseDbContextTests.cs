@@ -16,7 +16,7 @@ public class DatabaseDbContextTests
     public void SetUp()
     {
         _factory = new MedicalDocumentationManagerInMemoryDbContextFactory();
-        _context = _factory.CreateDbContext(Array.Empty<string>());
+        _context = _factory.CreateDbContext();
 
         _context.Database.EnsureCreated();
     }

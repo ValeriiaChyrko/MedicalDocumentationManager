@@ -21,7 +21,15 @@ public class PatientQueryHandlerTests
         PhoneNumber = "623-456-7890",
         Email = "test1@example.com",
         InsurancePolicyNumber = "622785605",
-        InsuranceProvider = "Health Net"
+        InsuranceProvider = "Health Net",
+        AddressEntity = new AddressEntity
+        {
+            Id = int.MaxValue,
+            Street = "Test Street",
+            City = "Test City",
+            State = "Test State",
+            Zip = "12345",
+        }
     };
 
     private readonly PatientEntity _seedDataPatient2 = new()
@@ -39,9 +47,13 @@ public class PatientQueryHandlerTests
     public void SetUp()
     {
         _factory = new MedicalDocumentationManagerInMemoryDbContextFactory();
-        _context = _factory.CreateDbContext(Array.Empty<string>());
+        _context = _factory.CreateDbContext();
 
-        var mapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile(new PatientMappingProfile()); });
+        var mapperConfig = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new AddressMappingProfile());
+            cfg.AddProfile(new PatientMappingProfile());
+        });
 
         _mapper = mapperConfig.CreateMapper();
     }
@@ -50,6 +62,7 @@ public class PatientQueryHandlerTests
     {
         _context.PatientEntities.Add(_seedDataPatient1);
         _context.PatientEntities.Add(_seedDataPatient2);
+        _context.AddressEntities.Add(_seedDataPatient1.AddressEntity);
         _context.SaveChanges();
     }
 
@@ -139,6 +152,44 @@ public class PatientQueryHandlerTests
 
         // Act
         SeedData();
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.Should().BeNull();
+    }
+    
+    [Test]
+    public async Task Handle_GetPatientByIdWithAddressQuery_ReturnsRespondPatientDto_WithAddress()
+    {
+        // Arrange
+        var handler = new GetPatientByIdWithAddressQueryHandler(_context, _mapper);
+        var query = new GetPatientByIdWithAddressQuery(_seedDataPatient1.Id);
+        SeedData();
+
+        // Act
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Id.Should().Be(_seedDataPatient1.Id);
+        result.FullName.Should().Be(_seedDataPatient1.FullName);
+        result.PhoneNumber.Should().Be(_seedDataPatient1.PhoneNumber);
+        result.Email.Should().Be(_seedDataPatient1.Email);
+        result.InsurancePolicyNumber.Should().Be(_seedDataPatient1.InsurancePolicyNumber);
+        result.InsuranceProvider.Should().Be(_seedDataPatient1.InsuranceProvider);
+        result.Address.Should().NotBeNull();
+        result.Address.City.Should().Be(_seedDataPatient1.AddressEntity.City);
+        result.Address.State.Should().Be(_seedDataPatient1.AddressEntity.State);
+    }
+
+    [Test]
+    public async Task Handle_ReturnsNull_WhenPatientDoesNotExist()
+    {
+        // Arrange
+        var handler = new GetPatientByIdWithAddressQueryHandler(_context, _mapper);
+        var query = new GetPatientByIdWithAddressQuery(Guid.NewGuid());
+
+        // Act
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert

@@ -6,7 +6,7 @@ namespace MedicalDocumentationManager.Database.Contexts.Implementations;
 
 public class MedicalDocumentationManagerPostgresSqlDbContextFactory : IMedicalDocumentationManagerDbContextFactory
 {
-    public MedicalDocumentationManagerDbContext CreateDbContext(string[] args)
+    public MedicalDocumentationManagerDbContext CreateDbContext()
     {
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

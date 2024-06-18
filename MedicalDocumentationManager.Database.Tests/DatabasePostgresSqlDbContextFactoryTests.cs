@@ -14,7 +14,7 @@ public class DatabasePostgresSqlDbContextFactoryTests
         var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory();
 
         // Act
-        var dbContext = factory.CreateDbContext(Array.Empty<string>());
+        var dbContext = factory.CreateDbContext();
 
         // Assert
         dbContext.Should().NotBeNull();
@@ -32,7 +32,7 @@ public class DatabasePostgresSqlDbContextFactoryTests
             .Build();
 
         // Act
-        var dbContext = factory.CreateDbContext(Array.Empty<string>());
+        var dbContext = factory.CreateDbContext();
 
         // Assert
         dbContext.Database.GetDbConnection().ConnectionString.Should()
@@ -46,7 +46,7 @@ public class DatabasePostgresSqlDbContextFactoryTests
         var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory();
 
         // Act
-        var dbContext = factory.CreateDbContext(Array.Empty<string>());
+        var dbContext = factory.CreateDbContext();
 
         // Assert
         dbContext.Database.ProviderName.Should().Be("Npgsql.EntityFrameworkCore.PostgreSQL");

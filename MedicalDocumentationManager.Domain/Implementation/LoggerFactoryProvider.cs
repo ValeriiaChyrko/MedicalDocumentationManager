@@ -1,10 +1,9 @@
-﻿using MedicalDocumentationManager.Domain.Abstraction;
-using MedicalDocumentationManager.Domain.Abstraction.Contracts;
+﻿using MedicalDocumentationManager.Domain.Abstraction.Contracts;
 using Microsoft.Extensions.Configuration;
 
 namespace MedicalDocumentationManager.Domain.Implementation;
 
-public class LoggerFactoryProvider
+public class LoggerFactoryProvider : ILoggerFactoryProvider
 {
     private readonly IConfiguration _config;
 

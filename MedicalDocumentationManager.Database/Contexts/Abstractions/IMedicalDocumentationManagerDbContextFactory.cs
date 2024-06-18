@@ -4,5 +4,5 @@ namespace MedicalDocumentationManager.Database.Contexts.Abstractions;
 
 public interface IMedicalDocumentationManagerDbContextFactory
 {
-    MedicalDocumentationManagerDbContext CreateDbContext(string[] args);
+    MedicalDocumentationManagerDbContext CreateDbContext();
 }
