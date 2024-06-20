@@ -374,4 +374,51 @@ public class DoctorServiceTests
         // Act and Assert
         Assert.ThrowsAsync<DatabaseException>(() => _doctorService.GetDoctorByIdAsync(doctorId));
     }
+    
+    [Test]
+    public async Task GetDoctorWithAddressByIdAsync_Should_Return_Doctor_With_Address()
+    {
+        // Arrange
+        var doctorId = Guid.NewGuid();
+
+        var doctorResponse = new RespondDoctorDto
+        {
+            Id = Guid.NewGuid(),
+            FullName = "John Doe",
+            BirthDate = DateOnly.FromDateTime(DateTime.Now),
+            PhoneNumber = "1234567890",
+            Email = "john.doe@example.com",
+            Address = new AddressDto
+            {
+                Street = "123 Main St",
+                City = "Anytown",
+                State = "CA",
+                Zip = "12345"
+            },
+            Specialization = "General Practitioner",
+            ExperienceInYears = 10,
+            Education = "Medical School",
+            RoomNumber = "123"
+        };
+
+        _mediator.Send(Arg.Any<GetDoctorByIdWithAddressQuery>()).Returns(doctorResponse);
+
+        // Act
+        var result = await _doctorService.GetDoctorWithAddressByIdAsync(doctorId);
+
+        // Assert
+        result.Should().BeEquivalentTo(doctorResponse);
+    }
+
+    [Test]
+    public void GetDoctorWithAddressByIdAsync_Should_Throw_Exception_On_Error()
+    {
+        // Arrange
+        var doctorId = Guid.NewGuid();
+
+        _mediator.Send(Arg.Any<GetDoctorByIdWithAddressQuery>()).Throws<Exception>();
+
+        // Act and Assert
+        Assert.ThrowsAsync<DatabaseException>(() => _doctorService.GetDoctorWithAddressByIdAsync(doctorId));
+    }
 }

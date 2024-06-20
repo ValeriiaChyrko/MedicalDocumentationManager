@@ -24,6 +24,7 @@ public sealed class GetAllSubscriptionsByMedicalRecordIdQueryHandler
     {
         var subscriptionEntities = await _context
             .SubscriptionEntities
+            .AsNoTracking()
             .Where(m => m.MedicalRecordId == query.MedicalRecordId)
             .AsNoTracking()
             .ToListAsync(cancellationToken);

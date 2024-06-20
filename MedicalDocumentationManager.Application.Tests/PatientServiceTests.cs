@@ -274,7 +274,7 @@ public class PatientServiceTests
         // Arrange
         var patientId = Guid.NewGuid();
 
-        _mediator.Send(Arg.Any<GetAddressByDoctorIdQuery>()).Throws<Exception>();
+        _mediator.Send(Arg.Any<GetPatientByIdQuery>()).Throws<Exception>();
 
         // Act
         Assert.ThrowsAsync<DatabaseException>(() => _patientService.GetPatientByIdAsync(patientId));
@@ -341,5 +341,52 @@ public class PatientServiceTests
 
         // Act
         Assert.ThrowsAsync<DatabaseException>(() => _patientService.GetPatientsAsync());
+    }
+    
+    [Test]
+    public async Task GetPatientWithAddressByIdAsync_Should_Return_Patient_With_Address()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var addressResponse = new AddressDto
+        {
+            Id = 1,
+            Street = "123 Main St",
+            City = "Anytown",
+            State = "CA",
+            Zip = "12345"
+        };
+
+        var patientResponse = new RespondPatientDto
+        {
+            Id = patientId,
+            FullName = "John Doe",
+            BirthDate = DateOnly.FromDateTime(DateTime.Now),
+            PhoneNumber = "1234567890",
+            Email = "john.doe@example.com",
+            Address = addressResponse,
+            InsuranceProvider = "ABC Insurance",
+            InsurancePolicyNumber = "1234567890"
+        };
+
+        _mediator.Send(Arg.Any<GetPatientByIdWithAddressQuery>()).Returns(patientResponse);
+
+        // Act
+        var result = await _patientService.GetPatientWithAddressByIdAsync(patientId);
+
+        // Assert
+        result.Should().BeEquivalentTo(patientResponse);
+    }
+
+    [Test]
+    public void GetPatientWithAddressByIdAsync_Should_Throw_Exception_On_Error()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+
+        _mediator.Send(Arg.Any<GetPatientByIdWithAddressQuery>()).Throws<Exception>();
+
+        // Act
+        Assert.ThrowsAsync<DatabaseException>(() => _patientService.GetPatientWithAddressByIdAsync(patientId));
     }
 }

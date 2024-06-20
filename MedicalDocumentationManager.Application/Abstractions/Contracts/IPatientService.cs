@@ -10,6 +10,7 @@ public interface IPatientService
     Task<RespondPatientDto> UpdatePatientAsync(Guid id, RequestPatientDto patient,
         CancellationToken cancellationToken = default);
     Task DeletePatientAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<RespondPatientDto> GetPatientByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<RespondPatientDto?> GetPatientByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<RespondPatientDto?> GetPatientWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<RespondPatientDto>> GetPatientsAsync(CancellationToken cancellationToken = default);
 }

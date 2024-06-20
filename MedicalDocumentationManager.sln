@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Application.Tests", "MedicalDocumentationManager.Application.Tests\MedicalDocumentationManager.Application.Tests.csproj", "{E0828F59-2B6C-4B87-A487-8DC567107C4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalDocumentationManager.Presentation", "MedicalDocumentationManager.Presentation\MedicalDocumentationManager.Presentation.csproj", "{6F5EC902-518B-4071-B0A2-E3EFF91264A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{E0828F59-2B6C-4B87-A487-8DC567107C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0828F59-2B6C-4B87-A487-8DC567107C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0828F59-2B6C-4B87-A487-8DC567107C4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5EC902-518B-4071-B0A2-E3EFF91264A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5EC902-518B-4071-B0A2-E3EFF91264A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5EC902-518B-4071-B0A2-E3EFF91264A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5EC902-518B-4071-B0A2-E3EFF91264A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{992325ED-F762-46EF-A2C7-F8A446B55335} = {91A124C7-ED48-4131-B9D1-4E28BFC06FC8}
@@ -82,5 +88,6 @@ Global
 		{EB73E780-ABF4-481F-9FEA-55D1F611B958} = {79CFCD11-780E-4699-BA4B-DAE972E1858B}
 		{70CACBA8-D660-4DBC-9E35-B4DC6AD5F0D3} = {79CFCD11-780E-4699-BA4B-DAE972E1858B}
 		{E0828F59-2B6C-4B87-A487-8DC567107C4B} = {79CFCD11-780E-4699-BA4B-DAE972E1858B}
+		{6F5EC902-518B-4071-B0A2-E3EFF91264A7} = {91A124C7-ED48-4131-B9D1-4E28BFC06FC8}
 	EndGlobalSection
 EndGlobal

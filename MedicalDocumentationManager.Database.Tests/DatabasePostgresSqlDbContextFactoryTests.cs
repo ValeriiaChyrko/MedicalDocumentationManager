@@ -11,7 +11,8 @@ public class DatabasePostgresSqlDbContextFactoryTests
     public void CreateDbContext_ReturnsDbContextInstance()
     {
         // Arrange
-        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory();
+        var configuration = new ConfigurationBuilder().Build();
+        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory(configuration);
 
         // Act
         var dbContext = factory.CreateDbContext();
@@ -25,11 +26,12 @@ public class DatabasePostgresSqlDbContextFactoryTests
     public void CreateDbContext_ConfigurationIsLoadedCorrectly()
     {
         // Arrange
-        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory();
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../../../../MedicalDocumentationManager.Presentation");
         var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(basePath)
             .AddJsonFile("appsettings.json", false, true)
             .Build();
+        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory(config);
 
         // Act
         var dbContext = factory.CreateDbContext();
@@ -43,7 +45,8 @@ public class DatabasePostgresSqlDbContextFactoryTests
     public void CreateDbContext_OptionsBuilderIsConfiguredCorrectly()
     {
         // Arrange
-        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory();
+        var configuration = new ConfigurationBuilder().Build();
+        var factory = new MedicalDocumentationManagerPostgresSqlDbContextFactory(configuration);
 
         // Act
         var dbContext = factory.CreateDbContext();

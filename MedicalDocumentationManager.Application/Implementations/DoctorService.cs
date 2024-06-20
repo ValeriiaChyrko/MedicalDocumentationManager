@@ -123,4 +123,20 @@ public class DoctorService : IDoctorService
             throw new DatabaseException("Error getting doctor", ex);
         }
     }
+    
+    public async Task<RespondDoctorDto?> GetDoctorWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var doctor = await _mediator.Send(new GetDoctorByIdWithAddressQuery(id), cancellationToken);
+
+            return doctor;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Error getting doctor {ex.InnerException}.");
+
+            throw new DatabaseException("Error getting doctor", ex);
+        }
+    }
 }

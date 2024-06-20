@@ -11,5 +11,6 @@ public interface IDoctorService
         CancellationToken cancellationToken = default);
     Task DeleteDoctorAsync(Guid id, CancellationToken cancellationToken = default);
     Task<RespondDoctorDto?> GetDoctorByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<RespondDoctorDto?> GetDoctorWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<RespondDoctorDto>> GetDoctorsAsync(CancellationToken cancellationToken = default);
 }

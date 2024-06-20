@@ -132,7 +132,7 @@ public class SubscriptionCommandHandlerTests
         _context.SubscriptionEntities.Add(subscriptionEntity);
         await _context.SaveChangesAsync();
 
-        var command = new DeleteSubscriptionCommand(subscriptionEntity.Id);
+        var command = new DeleteSubscriptionCommand(subscriptionEntity.PatientId, subscriptionEntity.MedicalRecordEntity.Id, subscriptionEntity.SubscriptionType);
         var handler = new DeleteSubscriptionCommandHandler(_context);
 
         // Act
@@ -161,7 +161,7 @@ public class SubscriptionCommandHandlerTests
     public async Task Handle_DeleteSubscriptionCommand_DoesNotThrowException_WhenSubscriptionDoesNotExist()
     {
         // Arrange
-        var command = new DeleteSubscriptionCommand(1);
+        var command = new DeleteSubscriptionCommand(Guid.Empty,Guid.Empty,string.Empty);
         var handler = new DeleteSubscriptionCommandHandler(_context);
 
         // Act

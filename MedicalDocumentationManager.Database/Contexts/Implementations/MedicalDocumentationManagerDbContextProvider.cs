@@ -19,7 +19,7 @@ public class MedicalDocumentationManagerDbContextProvider : IMedicalDocumentatio
         return dbContextType switch
         {
             "InMemory" => new MedicalDocumentationManagerInMemoryDbContextFactory(),
-            "PostgresSql" => new MedicalDocumentationManagerPostgresSqlDbContextFactory(),
+            "PostgresSql" => new MedicalDocumentationManagerPostgresSqlDbContextFactory(_config),
             _ => throw new ArgumentException("Invalid DbContext type", nameof(dbContextType))
         };
     }

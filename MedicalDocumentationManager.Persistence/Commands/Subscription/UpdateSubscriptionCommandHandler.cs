@@ -20,7 +20,10 @@ public sealed class UpdateSubscriptionCommandHandler : IRequestHandler<UpdateSub
     public Task<SubscriptionDto> Handle(UpdateSubscriptionCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (command is null) throw new ArgumentNullException(nameof(command));
+        if (command is null)
+        {
+            throw new ArgumentNullException(nameof(command));
+        }
 
         var subscriptionEntity = _mapper.Map<SubscriptionEntity>(command.SubscriptionDto);
         subscriptionEntity.Id = command.Id;

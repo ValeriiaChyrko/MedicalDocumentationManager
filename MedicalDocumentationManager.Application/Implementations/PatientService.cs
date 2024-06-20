@@ -90,14 +90,26 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<RespondPatientDto> GetPatientByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<RespondPatientDto?> GetPatientByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         try
         {
-            var address = await _mediator.Send(new GetAddressByDoctorIdQuery(id), cancellationToken);
             var patient = await _mediator.Send(new GetPatientByIdQuery(id), cancellationToken);
-            patient!.Address = address!;
+            return patient;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log($"Error getting patient {ex.InnerException}.");
 
+            throw new DatabaseException("Error getting patient", ex);
+        }
+    }
+    
+    public async Task<RespondPatientDto?> GetPatientWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var patient = await _mediator.Send(new GetPatientByIdWithAddressQuery(id), cancellationToken);
             return patient;
         }
         catch (Exception ex)

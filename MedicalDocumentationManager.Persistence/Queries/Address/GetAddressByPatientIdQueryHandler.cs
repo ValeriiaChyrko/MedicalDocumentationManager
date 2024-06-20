@@ -21,6 +21,7 @@ public sealed class GetAddressByPatientIdQueryHandler : IRequestHandler<GetAddre
     {
         var addressEntity = await _context.AddressEntities
             .Include(a => a.Patients)
+            .AsNoTracking()
             .FirstOrDefaultAsync(a =>
                     a.Patients != null &&
                     a.Patients.Any(p => p.Id == query.PatientId),

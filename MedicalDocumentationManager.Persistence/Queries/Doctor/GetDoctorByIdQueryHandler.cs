@@ -2,6 +2,7 @@
 using MediatR;
 using MedicalDocumentationManager.Database.Contexts.Abstractions;
 using MedicalDocumentationManager.DTOs.RespondDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedicalDocumentationManager.Persistence.Queries.Doctor;
 
@@ -18,7 +19,10 @@ public sealed class GetDoctorByIdQueryHandler : IRequestHandler<GetDoctorByIdQue
 
     public async Task<RespondDoctorDto?> Handle(GetDoctorByIdQuery query, CancellationToken cancellationToken)
     {
-        var doctorEntity = await _context.DoctorEntities.FindAsync(new object[] { query.Id }, cancellationToken);
+        var doctorEntity = await _context
+            .DoctorEntities
+            .AsNoTracking()
+            .FirstOrDefaultAsync(mr => mr.Id == query.Id, cancellationToken);
 
         return doctorEntity != null ? _mapper.Map<RespondDoctorDto>(doctorEntity) : null;
     }

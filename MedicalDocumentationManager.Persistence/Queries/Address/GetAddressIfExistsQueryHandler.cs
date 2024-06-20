@@ -19,7 +19,9 @@ public sealed class GetAddressIfExistsQueryHandler : IRequestHandler<GetAddressI
 
     public async Task<AddressDto?> Handle(GetAddressIfExistsQuery query, CancellationToken cancellationToken)
     {
-        var addressEntity = await _context.AddressEntities
+        var addressEntity = await _context
+            .AddressEntities
+            .AsNoTracking()
             .FirstOrDefaultAsync(a =>
                     a.Street == query.AddressDto.Street &&
                     a.City == query.AddressDto.City &&

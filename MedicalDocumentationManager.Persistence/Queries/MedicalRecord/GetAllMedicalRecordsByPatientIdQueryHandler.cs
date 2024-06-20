@@ -23,6 +23,7 @@ public sealed class GetAllMedicalRecordsByPatientIdQueryHandler
     {
         var medicalRecords = await _context
             .MedicalRecordEntities
+            .AsNoTracking()
             .Where(m => m.PatientId == query.PatientId)
             .AsNoTracking()
             .ToListAsync(cancellationToken);

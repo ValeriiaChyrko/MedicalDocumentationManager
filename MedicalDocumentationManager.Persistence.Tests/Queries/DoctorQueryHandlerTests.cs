@@ -23,7 +23,15 @@ public class DoctorQueryHandlerTests
         Specialization = "Test Specialization",
         ExperienceInYears = 5,
         Education = "Test Education",
-        RoomNumber = "101"
+        RoomNumber = "101",
+        AddressEntity = new AddressEntity
+        {
+            Id = int.MaxValue,
+            Street = "Test Street",
+            City = "Test City",
+            State = "Test State",
+            Zip = "12345"
+        }
     };
 
     private readonly DoctorEntity _seedDataDoctor2 = new DoctorEntity
@@ -46,6 +54,7 @@ public class DoctorQueryHandlerTests
         
         var mapperConfig = new MapperConfiguration(cfg =>
         {
+            cfg.AddProfile(new AddressMappingProfile());
             cfg.AddProfile(new DoctorMappingProfile());
         });
 
@@ -54,6 +63,7 @@ public class DoctorQueryHandlerTests
 
     private void SeedData()
     {
+        _context.AddressEntities.Add(_seedDataDoctor1.AddressEntity);
         _context.DoctorEntities.Add(_seedDataDoctor1);
         _context.DoctorEntities.Add(_seedDataDoctor2);
         _context.SaveChanges();
@@ -130,8 +140,8 @@ public class DoctorQueryHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        result.Should().NotBeNull();
-result.Id.Should().Be(_seedDataDoctor1.Id);
+        result.Should().NotBeNull(); 
+        result.Id.Should().Be(_seedDataDoctor1.Id);
         result.FullName.Should().Be(_seedDataDoctor1.FullName);
         result.PhoneNumber.Should().Be(_seedDataDoctor1.PhoneNumber);
         result.Email.Should().Be(_seedDataDoctor1.Email);
@@ -139,6 +149,35 @@ result.Id.Should().Be(_seedDataDoctor1.Id);
         result.ExperienceInYears.Should().Be(_seedDataDoctor1.ExperienceInYears);
         result.Education.Should().Be(_seedDataDoctor1.Education);
         result.RoomNumber.Should().Be(_seedDataDoctor1.RoomNumber);
+    }
+    
+    [Test]
+    public async Task Handle_GetDoctorByIdWithAddressQuery_ReturnsRespondDoctorDto_WhenDoctorExists()
+    {
+        // Arrange
+        var handler = new GetDoctorByIdWithAddressQueryHandler(_context, _mapper);
+        var query = new GetDoctorByIdWithAddressQuery(_seedDataDoctor1.Id);
+
+        // Act
+        SeedData();
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull(); 
+        result.Id.Should().Be(_seedDataDoctor1.Id);
+        result.FullName.Should().Be(_seedDataDoctor1.FullName);
+        result.PhoneNumber.Should().Be(_seedDataDoctor1.PhoneNumber);
+        result.Email.Should().Be(_seedDataDoctor1.Email);
+        result.Specialization.Should().Be(_seedDataDoctor1.Specialization);
+        result.ExperienceInYears.Should().Be(_seedDataDoctor1.ExperienceInYears);
+        result.Education.Should().Be(_seedDataDoctor1.Education);
+        result.RoomNumber.Should().Be(_seedDataDoctor1.RoomNumber);
+        result.Address.Should().NotBeNull();
+        result.Address.Id.Should().Be(_seedDataDoctor1.AddressEntity.Id);
+        result.Address.City.Should().Be(_seedDataDoctor1.AddressEntity.City);
+        result.Address.State.Should().Be(_seedDataDoctor1.AddressEntity.State);
+        result.Address.Street.Should().Be(_seedDataDoctor1.AddressEntity.Street);
+        result.Address.Zip.Should().Be(_seedDataDoctor1.AddressEntity.Zip);
     }
 
     [Test]

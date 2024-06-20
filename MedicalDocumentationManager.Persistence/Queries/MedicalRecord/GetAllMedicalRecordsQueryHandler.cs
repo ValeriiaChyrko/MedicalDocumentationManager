@@ -24,6 +24,7 @@ public sealed class GetAllMedicalRecordsQueryHandler
         var doctors = await _context
             .MedicalRecordEntities
             .AsNoTracking()
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         return doctors.Select(entityModel => _mapper.Map<RespondMedicalRecordDto>(entityModel)).ToList();
